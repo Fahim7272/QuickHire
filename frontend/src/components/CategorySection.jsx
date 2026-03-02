@@ -99,7 +99,7 @@ export default function CategorySection() {
             <div className="max-w-7xl mx-auto px-6">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-10">
-                    <h2 className="text-3xl md:text-4xl font-extrabold text-[#25324B]" style={{ fontFamily: 'Epilogue, sans-serif' }}>
+                    <h2 className="text-3xl md:text-4xl font-semibold text-[#25324B]" style={{ fontFamily: "'Clash Display', sans-serif" }}>
                         Explore by{' '}
                         <span className="text-[#26A4FF]">category</span>
                     </h2>
@@ -120,8 +120,8 @@ export default function CategorySection() {
                                 key={cat.name}
                                 onClick={() => navigate(`/jobs?category=${cat.name}`)}
                                 className={`p-6 rounded-lg border text-left transition-all hover:shadow-md hover:-translate-y-0.5 ${isActive
-                                        ? 'bg-[#4640DE] text-white border-[#4640DE]'
-                                        : 'bg-white text-[#25324B] border-[#D6DDEB] hover:border-[#4640DE]'
+                                    ? 'bg-[#4640DE] text-white border-[#4640DE]'
+                                    : 'bg-white text-[#25324B] border-[#D6DDEB] hover:border-[#4640DE]'
                                     }`}
                             >
                                 <div className={`mb-4 ${isActive ? 'text-white' : 'text-[#4640DE]'}`}>

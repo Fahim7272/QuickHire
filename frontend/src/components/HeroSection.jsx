@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
 import heroPerson from '../assets/Hero_Person.png';
+import underlineLine from '../assets/Lines under the heading.png';
+import bgPattern from '../assets/Pattern.png';
 
 const locations = [
     'Florence, Italy',
@@ -28,40 +30,34 @@ export default function HeroSection() {
 
     return (
         <section className="bg-[#F1F2F4] relative overflow-hidden">
-            {/* Background decorative lines */}
+            {/* Background pattern from assets */}
             <div className="absolute inset-0 pointer-events-none">
-                <svg className="absolute right-0 top-0 w-2/3 h-full opacity-30" viewBox="0 0 600 400" fill="none">
-                    <line x1="200" y1="-50" x2="650" y2="450" stroke="#C3C2E8" strokeWidth="1" />
-                    <line x1="280" y1="-50" x2="730" y2="450" stroke="#C3C2E8" strokeWidth="1" />
-                    <line x1="360" y1="-50" x2="810" y2="450" stroke="#C3C2E8" strokeWidth="1" />
-                    <rect x="330" y="30" width="90" height="90" stroke="#C3C2E8" strokeWidth="1.5" fill="none" />
-                    <rect x="450" y="60" width="100" height="100" stroke="#C3C2E8" strokeWidth="1.5" fill="none" />
-                </svg>
+                <img
+                    src={bgPattern}
+                    alt=""
+                    className="absolute right-0 top-0 h-full w-auto object-cover opacity-60"
+                />
             </div>
 
             <div className="max-w-7xl mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-center gap-8 relative z-10">
                 {/* Left Content */}
                 <div className="flex-1 max-w-xl">
                     <h1
-                        className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#25324B] leading-tight mb-4"
-                        style={{ fontFamily: "'Epilogue', sans-serif" }}
+                        className="text-4xl md:text-5xl lg:text-6xl font-semibold text-[#25324B] leading-tight mb-4"
+                        style={{ fontFamily: "'Clash Display', sans-serif" }}
                     >
                         Discover <br />
                         more than <br />
                         <span className="text-[#26A4FF]">5000+ Jobs</span>
                     </h1>
 
-                    {/* Blue hand-drawn underline */}
+                    {/* Underline image from assets */}
                     <div className="mb-6 -mt-2">
-                        <svg width="240" height="14" viewBox="0 0 240 14" fill="none">
-                            <path
-                                d="M2 10 C30 3, 70 13, 120 8 C170 3, 210 11, 238 8"
-                                stroke="#26A4FF"
-                                strokeWidth="3.5"
-                                strokeLinecap="round"
-                                fill="none"
-                            />
-                        </svg>
+                        <img
+                            src={underlineLine}
+                            alt=""
+                            className="w-64 object-contain"
+                        />
                     </div>
 
                     <p className="text-[#515B6F] text-base leading-relaxed mb-8 max-w-sm" style={{ fontFamily: "'Epilogue', sans-serif" }}>

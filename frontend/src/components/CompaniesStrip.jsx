@@ -19,7 +19,7 @@ export default function CompaniesStrip() {
                 <p className="text-[#9199A3] text-sm mb-6" style={{ fontFamily: "'Epilogue', sans-serif" }}>
                     Companies we helped grow
                 </p>
-                <div className="flex flex-wrap items-center gap-10 md:gap-16">
+                <div className="flex flex-wrap items-center justify-between gap-6">
                     {companies.map((c) => (
                         <div
                             key={c.name}
