@@ -11,7 +11,6 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com/)
 [![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 [Live Demo](#) · [Report Bug](https://github.com/Fahim7272/QuickHire/issues) · [Request Feature](https://github.com/Fahim7272/QuickHire/issues)
 
@@ -32,8 +31,6 @@
 - [API Reference](#-api-reference)
 - [Database Schema](#-database-schema)
 - [Environment Variables](#-environment-variables)
-- [Contributing](#-contributing)
-- [License](#-license)
 
 ---
 
@@ -435,41 +432,3 @@ CACHE_STORE=database
 SESSION_DRIVER=database
 ```
 
----
-
-## 🤝 Contributing
-
-Contributions are what make the open source community such an amazing place. Any contributions are **greatly appreciated**.
-
-1. Fork the repository
-2. Create your feature branch:
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m 'feat: add AmazingFeature'
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. Open a Pull Request
-
-Please make sure your code follows the existing style and passes all validations before submitting a PR.
-
----
-
-## 📄 License
-
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
-
----
-
-<div align="center">
-
-Made with ❤️ by [Fahim](https://github.com/Fahim7272)
-
-⭐ Star this repo if you found it helpful!
-
-</div>
