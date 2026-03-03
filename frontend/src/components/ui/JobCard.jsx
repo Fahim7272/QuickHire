@@ -32,7 +32,7 @@ export function FeaturedJobCard({ job }) {
             aria-label={`View ${job.title} at ${job.company}`}
             style={{
                 width: '100%', textAlign: 'left', background: '#fff',
-                border: '1.5px solid #E2E8F0', borderRadius: 14, padding: 20,
+                border: '1.5px solid #D6DDEB', borderRadius: 0, padding: 20,
                 cursor: 'pointer', transition: 'all 200ms ease',
                 display: 'flex', flexDirection: 'column', gap: 12,
                 fontFamily: 'inherit',
@@ -82,7 +82,7 @@ export function FeaturedJobCard({ job }) {
 
             {/* Title + company */}
             <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#0F172A', marginBottom: 5, lineHeight: 1.3 }}>
+                <div className="qh-card-title" style={{ fontSize: 15, fontWeight: 600, color: '#0F172A', marginBottom: 5, lineHeight: 1.3 }}>
                     {job.title}
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, fontSize: 12, color: '#94A3B8' }}>

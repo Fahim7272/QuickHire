@@ -35,12 +35,27 @@ export default function CTABanner() {
                         </p>
                         <div>
                             <button
-                                onClick={() => navigate('/admin')}
-                                className="border-2 border-white text-white font-semibold px-7 py-3 rounded hover:bg-white hover:text-[#4640DE] transition-all text-sm"
+                                onClick={() => navigate('/signup')}
+                                className="font-semibold px-7 py-3 text-sm transition-all"
+                                style={{
+                                    background: '#FFFFFF',
+                                    color: '#4640DE',
+                                    border: 'none',
+                                    borderRadius: 0,
+                                    cursor: 'pointer',
+                                    fontFamily: "'Epilogue', sans-serif",
+                                    fontWeight: 700,
+                                    fontSize: 14,
+                                    padding: '14px 28px',
+                                    transition: 'opacity 150ms',
+                                }}
+                                onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
+                                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                             >
                                 Sign Up For Free
                             </button>
                         </div>
+
                     </div>
 
                     {/* Dashboard image — absolutely positioned to show full image within banner */}

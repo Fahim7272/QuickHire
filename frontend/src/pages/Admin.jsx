@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Trash2, CheckCircle2, AlertCircle, Lock, Eye, EyeOff, Building2, MapPin, Star, BarChart2, Users, Briefcase } from 'lucide-react';
+import { Plus, Trash2, CheckCircle2, AlertCircle, Building2, MapPin, Star, BarChart2, Users, Briefcase } from 'lucide-react';
 import { getJobs, createJob, deleteJob } from '../services/api';
 import { mockJobs } from '../services/mockData';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -19,55 +19,7 @@ const CAT_COLORS = {
     Sales: { bg: '#FFF0F6', text: '#C02D7A' }, 'Human Resource': { bg: '#E9F9FF', text: '#0A7FA3' },
 };
 
-function PinGate({ onUnlock }) {
-    const [pin, setPin] = useState('');
-    const [show, setShow] = useState(false);
-    const [err, setErr] = useState('');
-    const [attempts, setAttempts] = useState(0);
 
-    const submit = e => {
-        e.preventDefault();
-        if (pin === ADMIN_PIN) { onUnlock(); }
-        else { setAttempts(a => a + 1); setErr(`Incorrect PIN. ${3 - attempts - 1} attempt(s) remaining.`); setPin(''); }
-    };
-
-    return (
-        <div style={{ minHeight: '100vh', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-            <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 20, padding: '40px 40px 36px', width: '100%', maxWidth: 380, textAlign: 'center', boxShadow: '0 8px 32px rgba(15,23,42,0.08)' }}>
-                <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', border: '1.5px solid #C7D2FE' }}>
-                    <Lock size={24} color="#4F46E5" />
-                </div>
-                <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0F172A', marginBottom: 6, letterSpacing: '-0.02em' }}>Admin Access</h1>
-                <p style={{ fontSize: 14, color: '#94A3B8', marginBottom: 28, lineHeight: 1.5 }}>Enter your PIN to manage job listings</p>
-                <form onSubmit={submit}>
-                    <div style={{ position: 'relative', marginBottom: 16 }}>
-                        <input type={show ? 'text' : 'password'} value={pin}
-                            onChange={e => { setPin(e.target.value); setErr(''); }}
-                            placeholder="••••"
-                            maxLength={8}
-                            autoFocus
-                            aria-label="Admin PIN"
-                            aria-describedby={err ? 'pin-error' : 'pin-hint'}
-                            style={{ width: '100%', padding: '14px 48px 14px 16px', borderRadius: 12, border: `1.5px solid ${err ? '#FCA5A5' : '#E2E8F0'}`, background: err ? '#FFF5F5' : '#F8FAFC', fontSize: 22, fontWeight: 700, textAlign: 'center', letterSpacing: '0.25em', outline: 'none', fontFamily: 'inherit', color: '#0F172A', transition: 'border-color 150ms', boxSizing: 'border-box' }}
-                        />
-                        <button type="button" onClick={() => setShow(!show)} aria-label={show ? 'Hide PIN' : 'Show PIN'}
-                            style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'none', cursor: 'pointer', color: '#94A3B8' }}>
-                            {show ? <EyeOff size={16} /> : <Eye size={16} />}
-                        </button>
-                    </div>
-                    {err && <p id="pin-error" role="alert" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontSize: 13, color: '#EF4444', marginBottom: 14 }}><AlertCircle size={13} />{err}</p>}
-                    <p id="pin-hint" style={{ fontSize: 11, color: '#94A3B8', marginBottom: 16 }}>Default PIN: <strong>1234</strong></p>
-                    <button type="submit"
-                        style={{ width: '100%', padding: 14, background: 'linear-gradient(135deg,#4F46E5,#6366F1)', color: '#fff', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 16px rgba(79,70,229,0.35)', transition: 'all 150ms ease' }}
-                        onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 24px rgba(79,70,229,0.5)'}
-                        onMouseLeave={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(79,70,229,0.35)'}>
-                        Unlock Admin
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
-}
 
 function Toast({ msg, type = 'success', onDismiss }) {
     useEffect(() => { const t = setTimeout(onDismiss, 3000); return () => clearTimeout(t); }, []);
@@ -216,87 +168,136 @@ function AddJobForm({ onJobAdded }) {
 }
 
 function JobsTable({ jobs, loading, onDelete }) {
-    const [confirmId, setConfirmId] = useState(null);
-    const [deleting, setDeleting] = useState(null);
+    const [pendingDeleteId, setPendingDeleteId] = useState(null);
+    const [deleting, setDeleting] = useState(false);
     const [toast, setToast] = useState(null);
 
-    const doDelete = async id => {
-        setDeleting(id);
+    const pendingJob = jobs.find(j => j.id === pendingDeleteId);
+
+    const doDelete = async () => {
+        if (!pendingDeleteId) return;
+        setDeleting(true);
         try {
-            await deleteJob(id);
-            onDelete(id);
+            await deleteJob(pendingDeleteId);
+            onDelete(pendingDeleteId);
             setToast({ msg: 'Job listing deleted.', type: 'success' });
         } catch {
-            onDelete(id);
+            onDelete(pendingDeleteId);
             setToast({ msg: 'Job removed (demo mode).', type: 'success' });
-        } finally { setDeleting(null); setConfirmId(null); }
+        } finally { setDeleting(false); setPendingDeleteId(null); }
     };
 
     return (
         <>
             {toast && <Toast {...toast} onDismiss={() => setToast(null)} />}
-            <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 16, overflow: 'hidden' }}>
-                <div style={{ padding: '18px 24px', borderBottom: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+
+            {/* ── Delete Confirmation Modal ── */}
+            {pendingDeleteId && (
+                <div
+                    style={{
+                        position: 'fixed', inset: 0, zIndex: 300,
+                        background: 'rgba(15,23,42,0.45)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        padding: 24,
+                        backdropFilter: 'blur(4px)',
+                    }}
+                    onClick={e => { if (e.target === e.currentTarget) setPendingDeleteId(null); }}
+                    role="dialog" aria-modal="true" aria-labelledby="del-modal-title"
+                >
+                    <div style={{
+                        background: '#fff', borderRadius: 0, padding: '32px 36px',
+                        maxWidth: 420, width: '100%',
+                        boxShadow: '0 24px 64px rgba(15,23,42,0.20)',
+                        border: '1px solid #D6DDEB',
+                        animation: 'fadeInUp 0.2s ease both',
+                    }}>
+                        <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#FEF2F2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                            <Trash2 size={22} color="#EF4444" />
+                        </div>
+                        <h2 id="del-modal-title" style={{ textAlign: 'center', fontSize: 18, fontWeight: 800, color: '#25324B', marginBottom: 8, fontFamily: "'Epilogue', sans-serif" }}>
+                            Delete Job Listing?
+                        </h2>
+                        <p style={{ textAlign: 'center', fontSize: 14, color: '#515B6F', marginBottom: 8, lineHeight: 1.6 }}>
+                            Are you sure you want to delete:
+                        </p>
+                        <p style={{ textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#25324B', marginBottom: 24, padding: '10px 16px', background: '#F1F2F4' }}>
+                            &ldquo;{pendingJob?.title}&rdquo;
+                        </p>
+                        <p style={{ textAlign: 'center', fontSize: 12, color: '#9199A3', marginBottom: 24 }}>
+                            This action cannot be undone.
+                        </p>
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            <button
+                                onClick={() => setPendingDeleteId(null)}
+                                style={{ flex: 1, padding: '12px 0', border: '1.5px solid #D6DDEB', background: '#fff', color: '#515B6F', fontSize: 14, fontWeight: 700, cursor: 'pointer', borderRadius: 0, fontFamily: 'inherit', transition: 'all 150ms' }}
+                                onMouseEnter={e => e.currentTarget.style.background = '#F1F2F4'}
+                                onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={doDelete}
+                                disabled={deleting}
+                                style={{ flex: 1, padding: '12px 0', border: 'none', background: '#EF4444', color: '#fff', fontSize: 14, fontWeight: 700, cursor: deleting ? 'wait' : 'pointer', borderRadius: 0, fontFamily: 'inherit', opacity: deleting ? 0.7 : 1, transition: 'all 150ms' }}
+                                onMouseEnter={e => !deleting && (e.currentTarget.style.background = '#DC2626')}
+                                onMouseLeave={e => e.currentTarget.style.background = '#EF4444'}
+                            >
+                                {deleting ? 'Deleting…' : 'Yes, Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 0, overflow: 'hidden' }}>
+                <div style={{ padding: '18px 24px', borderBottom: '1px solid #D6DDEB', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div>
-                        <h2 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A' }}>All Job Listings</h2>
-                        <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 2 }}>{jobs.length} listing{jobs.length !== 1 ? 's' : ''} total</p>
+                        <h2 style={{ fontSize: 16, fontWeight: 800, color: '#25324B', fontFamily: "'Epilogue', sans-serif" }}>All Job Listings</h2>
+                        <p style={{ fontSize: 12, color: '#515B6F', marginTop: 2 }}>{jobs.length} listing{jobs.length !== 1 ? 's' : ''} total</p>
                     </div>
                 </div>
 
                 {loading ? <LoadingSpinner text="Loading listings…" /> : jobs.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '48px 0', fontSize: 14, color: '#94A3B8' }}>No listings yet. Create one above!</div>
+                    <div style={{ textAlign: 'center', padding: '48px 0', fontSize: 14, color: '#9199A3' }}>No listings yet. Create one above!</div>
                 ) : (
                     <div>
                         {jobs.map(job => {
                             const cs = CAT_COLORS[job.category] || { bg: '#F1F5F9', text: '#475569' };
                             return (
                                 <div key={job.id}
-                                    style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px', borderBottom: '1px solid #F9FAFB', transition: 'background 150ms ease' }}
+                                    style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px', borderBottom: '1px solid #F1F2F4', transition: 'background 150ms ease' }}
                                     onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
 
-                                    <div style={{ width: 40, height: 40, borderRadius: 10, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#4F46E5', flexShrink: 0 }}>
+                                    <div style={{ width: 40, height: 40, borderRadius: 0, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 800, color: '#4640DE', flexShrink: 0 }}>
                                         {job.company?.slice(0, 2).toUpperCase()}
                                     </div>
 
                                     <div style={{ flex: 1, minWidth: 0 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3, flexWrap: 'wrap' }}>
-                                            <span style={{ fontWeight: 700, fontSize: 14, color: '#0F172A' }}>{job.title}</span>
+                                            <span style={{ fontWeight: 700, fontSize: 14, color: '#25324B' }}>{job.title}</span>
                                             {job.is_featured && <span style={{ fontSize: 10, fontWeight: 700, background: '#FEF3C7', color: '#D97706', borderRadius: 9999, padding: '2px 7px' }}>⭐ Featured</span>}
                                         </div>
-                                        <div style={{ fontSize: 12, color: '#94A3B8', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                                        <div style={{ fontSize: 12, color: '#7C8493', display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Building2 size={11} />{job.company}</span>
                                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><MapPin size={11} />{job.location}</span>
                                         </div>
                                     </div>
 
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                                        <span style={{ background: cs.bg, color: cs.text, fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 9999 }}>{job.category}</span>
-                                        <span style={{ border: '1.5px solid #E2E8F0', color: '#64748B', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 5 }}>{job.type}</span>
+                                        <span style={{ background: cs.bg, color: cs.text, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 9999, display: 'inline-flex', alignItems: 'center', lineHeight: 1 }}>{job.category}</span>
+                                        <span style={{ border: '1px solid #D6DDEB', color: '#515B6F', fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 9999, display: 'inline-flex', alignItems: 'center', lineHeight: 1 }}>{job.type}</span>
                                     </div>
 
                                     <div style={{ flexShrink: 0 }}>
-                                        {confirmId === job.id ? (
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                                <span style={{ fontSize: 12, color: '#64748B' }}>Delete?</span>
-                                                <button onClick={() => doDelete(job.id)} disabled={deleting === job.id}
-                                                    style={{ padding: '5px 10px', background: '#EF4444', color: '#fff', border: 'none', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', opacity: deleting === job.id ? 0.6 : 1 }}>
-                                                    {deleting === job.id ? '…' : 'Yes, delete'}
-                                                </button>
-                                                <button onClick={() => setConfirmId(null)}
-                                                    style={{ padding: '5px 10px', border: '1px solid #E2E8F0', background: '#fff', color: '#475569', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <button onClick={() => setConfirmId(job.id)}
-                                                style={{ width: 36, height: 36, borderRadius: 8, border: '1.5px solid #E2E8F0', background: '#F8FAFC', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#EF4444', transition: 'all 150ms' }}
-                                                onMouseEnter={e => { e.currentTarget.style.background = '#FEF2F2'; e.currentTarget.style.borderColor = '#FCA5A5'; }}
-                                                onMouseLeave={e => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = '#E2E8F0'; }}
-                                                aria-label={`Delete ${job.title}`} title="Delete listing">
-                                                <Trash2 size={14} />
-                                            </button>
-                                        )}
+                                        <button
+                                            onClick={() => setPendingDeleteId(job.id)}
+                                            style={{ width: 36, height: 36, borderRadius: 0, border: '1px solid #D6DDEB', background: '#F8FAFC', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#EF4444', transition: 'all 150ms' }}
+                                            onMouseEnter={e => { e.currentTarget.style.background = '#FEF2F2'; e.currentTarget.style.borderColor = '#FCA5A5'; }}
+                                            onMouseLeave={e => { e.currentTarget.style.background = '#F8FAFC'; e.currentTarget.style.borderColor = '#D6DDEB'; }}
+                                            aria-label={`Delete ${job.title}`} title="Delete listing">
+                                            <Trash2 size={14} />
+                                        </button>
                                     </div>
                                 </div>
                             );
@@ -309,16 +310,8 @@ function JobsTable({ jobs, loading, onDelete }) {
 }
 
 export default function Admin() {
-    // Pre-unlocked if arriving via Login with admin@admin.com
-    const [unlocked, setUnlocked] = useState(() => isAdminLoggedIn() || sessionStorage.getItem('admin_ok') === '1');
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const handleUnlock = () => {
-        loginAsAdmin(); // also persist in localStorage for Navbar
-        sessionStorage.setItem('admin_ok', '1');
-        setUnlocked(true);
-    };
 
     const loadJobs = async () => {
         try {
@@ -331,10 +324,8 @@ export default function Admin() {
 
     useEffect(() => {
         document.title = 'Admin Dashboard | QuickHire';
-        if (unlocked) loadJobs();
-    }, [unlocked]);
-
-    if (!unlocked) return <PinGate onUnlock={handleUnlock} />;
+        loadJobs();
+    }, []);
 
     const stats = [
         { label: 'Total Listings', value: jobs.length, Icon: Briefcase, gradient: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)', color: '#4F46E5' },
@@ -347,22 +338,16 @@ export default function Admin() {
         <>
             <Navbar />
             <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
-                <div style={{ background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
-                    <div style={{ maxWidth: 1152, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-                        <div>
-                            <h1 style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.01em' }}>Admin Dashboard</h1>
-                            <p style={{ fontSize: 12, color: '#94A3B8' }}>Manage job listings</p>
-                        </div>
-                        <button onClick={() => { sessionStorage.removeItem('admin_ok'); setUnlocked(false); }}
-                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1.5px solid #E2E8F0', borderRadius: 9, fontSize: 13, fontWeight: 600, color: '#64748B', background: '#F8FAFC', cursor: 'pointer', transition: 'all 150ms' }}
-                            onMouseEnter={e => { e.currentTarget.style.borderColor = '#CBD5E1'; e.currentTarget.style.color = '#0F172A'; }}
-                            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.color = '#64748B'; }}>
-                            <Lock size={13} /> Lock
-                        </button>
+                <div style={{ background: '#fff', borderBottom: '1px solid #D6DDEB', padding: '20px 0' }}>
+                    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 124px' }} className="qh-auth-header-inner">
+                        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 4, fontFamily: "'Epilogue', sans-serif" }}>
+                            Admin <span style={{ color: '#26A4FF' }}>Dashboard</span>
+                        </h1>
+                        <p style={{ fontSize: 14, color: '#515B6F' }}>Manage job listings</p>
                     </div>
                 </div>
 
-                <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }} className="qh-page-pad">
+                <div style={{ maxWidth: 1440, margin: '0 auto', padding: '28px 124px', display: 'flex', flexDirection: 'column', gap: 24 }} className="qh-auth-header-inner">
                     <div className="qh-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
                         {stats.map(({ label, value, Icon, gradient, color }) => (
                             <div key={label} style={{ background: gradient, borderRadius: 14, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>

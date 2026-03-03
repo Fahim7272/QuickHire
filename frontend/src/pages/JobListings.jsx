@@ -104,34 +104,34 @@ export default function JobListings() {
             <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
 
                 {/* Page header */}
-                <div style={{ background: '#fff', borderBottom: '1px solid #F1F5F9', padding: '28px 0' }}>
-                    <div style={{ maxWidth: 1152, margin: '0 auto', padding: '0 24px' }}>
+                <div style={{ background: '#fff', borderBottom: '1px solid #D6DDEB', padding: '28px 0' }}>
+                    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 124px' }} className="qh-auth-header-inner">
                         <nav aria-label="Breadcrumb" style={{ marginBottom: 10 }}>
-                            <ol style={{ display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: 0, fontSize: 12, color: '#94A3B8' }}>
-                                <li><Link to="/" style={{ color: '#94A3B8', textDecoration: 'none' }}>Home</Link></li>
+                            <ol style={{ display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: 0, fontSize: 12, color: '#9199A3' }}>
+                                <li><Link to="/" style={{ color: '#9199A3', textDecoration: 'none' }}>Home</Link></li>
                                 <li aria-hidden style={{ fontSize: 11 }}>›</li>
-                                <li style={{ color: '#4F46E5', fontWeight: 600 }}>Find Jobs</li>
+                                <li style={{ color: '#4640DE', fontWeight: 600 }}>Find Jobs</li>
                             </ol>
                         </nav>
                         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
                             <div>
-                                <h1 style={{ fontSize: 26, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 4, fontFamily: "'Epilogue', sans-serif" }}>
+                                <h1 style={{ fontSize: 28, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 4, fontFamily: "'Epilogue', sans-serif" }}>
                                     Find your <span style={{ color: '#26A4FF' }}>perfect job</span>
                                 </h1>
-
-                                <p style={{ fontSize: 13, color: '#94A3B8' }}>
+                                <p style={{ fontSize: 14, color: '#515B6F' }}>
                                     {loading ? 'Loading…' : `${meta.total || jobs.length} job${(meta.total || jobs.length) !== 1 ? 's' : ''} available`}
-                                    {activeFilters.length > 0 && <span style={{ color: '#4F46E5', fontWeight: 600 }}> · {activeFilters.length} filter{activeFilters.length > 1 ? 's' : ''} active</span>}
+                                    {activeFilters.length > 0 && <span style={{ color: '#4640DE', fontWeight: 600 }}> · {activeFilters.length} filter{activeFilters.length > 1 ? 's' : ''} active</span>}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px' }}>
+                <div style={{ maxWidth: 1440, margin: '0 auto', padding: '28px 124px' }} className="qh-auth-header-inner">
 
                     {/* Search + Filters Panel */}
-                    <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 14, padding: '16px 20px', marginBottom: 20, boxShadow: '0 2px 8px rgba(15,23,42,0.04)' }}>
+                    <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 0, padding: '16px 20px', marginBottom: 20 }}>
+
 
                         <form onSubmit={handleSearch} style={{ display: 'flex', gap: 10 }} role="search">
                             <div style={{
@@ -162,9 +162,9 @@ export default function JobListings() {
                             </div>
 
                             <button type="submit"
-                                style={{ background: 'linear-gradient(135deg, #4F46E5, #6366F1)', color: '#fff', border: 'none', borderRadius: 10, padding: '0 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44, transition: 'all 150ms ease' }}
-                                onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(79,70,229,0.4)'}
-                                onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
+                                style={{ background: '#4640DE', color: '#fff', border: 'none', borderRadius: 0, padding: '0 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44, transition: 'all 150ms ease' }}
+                                onMouseEnter={e => e.currentTarget.style.background = '#3730c0'}
+                                onMouseLeave={e => e.currentTarget.style.background = '#4640DE'}>
                                 Search
                             </button>
 
@@ -173,9 +173,9 @@ export default function JobListings() {
                                 aria-controls="filter-panel"
                                 style={{
                                     display: 'flex', alignItems: 'center', gap: 6, minHeight: 44,
-                                    border: `1.5px solid ${filtersOpen ? '#4F46E5' : '#E2E8F0'}`,
-                                    borderRadius: 10, padding: '0 16px', fontSize: 13, fontWeight: 700,
-                                    color: filtersOpen ? '#4F46E5' : '#64748B',
+                                    border: `1.5px solid ${filtersOpen ? '#4640DE' : '#D6DDEB'}`,
+                                    borderRadius: 0, padding: '0 16px', fontSize: 13, fontWeight: 700,
+                                    color: filtersOpen ? '#4640DE' : '#515B6F',
                                     background: filtersOpen ? '#EEF2FF' : '#F8FAFC',
                                     cursor: 'pointer', transition: 'all 150ms ease', whiteSpace: 'nowrap',
                                 }}>

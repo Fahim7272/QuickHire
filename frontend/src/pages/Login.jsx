@@ -47,7 +47,12 @@ export default function Login() {
         setSubmitting(true);
         await new Promise(r => setTimeout(r, 800));
         if (isAdminEmail) {
-            loginAsAdmin(); // set localStorage so Navbar shows Dashboard/Logout
+            if (form.password !== 'admin1234') {
+                setApiError('Incorrect admin password. Please check the credentials above.');
+                setSubmitting(false);
+                return;
+            }
+            loginAsAdmin();
             navigate('/admin');
         } else {
             navigate('/');
@@ -68,28 +73,25 @@ export default function Login() {
     return (
         <div style={{ minHeight: '100vh', background: '#F1F2F4', display: 'flex', flexDirection: 'column' }}>
 
-            {/* Navbar-style header — full 1440px width, 124px margin */}
             <header style={{ background: '#fff', borderBottom: '1px solid #D6DDEB' }}>
                 <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 124px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className="qh-auth-header-inner">
                     <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
                         <img src={quickhireLogo} alt="QuickHire" style={{ width: 32, height: 32, objectFit: 'contain' }} />
                         <span style={{ fontSize: 18, fontWeight: 800, color: '#25324B', fontFamily: "'Red Hat Display', sans-serif" }}>QuickHire</span>
                     </Link>
-                    <p style={{ fontSize: 14, color: '#7C8493' }}>
-                        Don't have an account?{' '}
-                        <Link to="/signup" style={{ color: '#4640DE', fontWeight: 700, textDecoration: 'none' }}>Sign Up</Link>
-                    </p>
                 </div>
             </header>
+
 
             {/* Main — centered within full width */}
             <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
                 <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 16, padding: '40px 40px', width: '100%', maxWidth: 480, boxShadow: '0 4px 24px rgba(37,50,75,0.06)' }}>
 
                     <div style={{ marginBottom: 24 }}>
-                        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 8, fontFamily: "'Epilogue', sans-serif" }}>
-                            Welcome Back 👋
+                        <h1 style={{ fontSize: 26, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 8, fontFamily: "'ClashDisplay', 'Epilogue', sans-serif" }}>
+                            Welcome Back
                         </h1>
+
                         <p style={{ fontSize: 14, color: '#515B6F', lineHeight: 1.6 }}>Sign in to continue to QuickHire</p>
                     </div>
 

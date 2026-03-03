@@ -59,11 +59,11 @@ function CompanyCard({ company }) {
             style={{
                 background: '#fff',
                 border: '1.5px solid #D6DDEB',
-                borderRadius: 16,
+                borderRadius: 0,
                 padding: 24,
                 display: 'flex',
                 flexDirection: 'column',
-                height: '100%',         /* ← ensures all cards stretch to same row height */
+                height: '100%',
                 boxSizing: 'border-box',
                 transition: 'all 200ms ease',
                 cursor: 'default',
@@ -90,7 +90,7 @@ function CompanyCard({ company }) {
 
                 {/* Name + description */}
                 <div>
-                    <h3 style={{ fontSize: 15, fontWeight: 800, color: '#0F172A', marginBottom: 5, lineHeight: 1.2 }}>{company.name}</h3>
+                    <h3 className="qh-card-title" style={{ fontSize: 15, fontWeight: 600, color: '#0F172A', marginBottom: 5, lineHeight: 1.2 }}>{company.name}</h3>
                     <p style={{ fontSize: 12, color: '#64748B', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {company.description}
                     </p>
@@ -105,14 +105,30 @@ function CompanyCard({ company }) {
 
                 {/* Footer */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 12, borderTop: '1px solid #F1F5F9' }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#16A34A', background: '#DCFCE7', padding: '3px 10px', borderRadius: 9999 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#16A34A', background: '#DCFCE7', padding: '4px 10px', borderRadius: 9999, display: 'inline-flex', alignItems: 'center', lineHeight: 1 }}>
                         {company.openings} open role{company.openings !== 1 ? 's' : ''}
                     </span>
-                    <Link to={`/jobs?category=${encodeURIComponent(company.category)}`}
-                        style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 700, color: '#4640DE', textDecoration: 'none', transition: 'gap 150ms' }}
-                        onMouseEnter={e => e.currentTarget.style.gap = '6px'}
-                        onMouseLeave={e => e.currentTarget.style.gap = '4px'}>
-                        View jobs <ChevronRight size={13} />
+                    <Link
+                        to={`/jobs?category=${encodeURIComponent(company.category)}`}
+                        style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 6,
+                            fontSize: 13,
+                            fontWeight: 700,
+                            color: '#4640DE',
+                            textDecoration: 'none',
+                            border: '1.5px solid #4640DE',
+                            padding: '7px 16px',
+                            borderRadius: 0,
+                            background: 'transparent',
+                            transition: 'background 150ms, color 150ms',
+                            letterSpacing: '0.01em',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#4640DE'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4640DE'; }}
+                    >
+                        View Jobs
                     </Link>
                 </div>{/* end footer row */}
             </div>{/* end inner content col */}
@@ -135,7 +151,7 @@ export default function BrowseCompanies() {
     return (
         <>
             <Navbar />
-            <div style={{ minHeight: '100vh', background: '#F1F2F4' }}>
+            <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
 
                 {/* Page header */}
                 <div style={{ background: '#fff', borderBottom: '1px solid #D6DDEB', padding: '28px 0' }}>
@@ -167,7 +183,8 @@ export default function BrowseCompanies() {
                 <div style={{ maxWidth: 1440, margin: '0 auto', padding: '32px 124px' }} className="qh-auth-header-inner">
 
                     {/* Search + category filter */}
-                    <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 12, padding: '16px 20px', marginBottom: 24 }}>
+                    <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 0, padding: '16px 20px', marginBottom: 24 }}>
+
                         <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
                             <div style={{ flex: 1, minWidth: 200, display: 'flex', alignItems: 'center', gap: 10, border: '1px solid #D6DDEB', borderRadius: 8, padding: '0 14px', background: '#F8FAFC', transition: 'all 150ms' }}
                                 onFocusCapture={e => { e.currentTarget.style.borderColor = '#4640DE'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(70,64,222,0.1)'; e.currentTarget.style.background = '#fff'; }}

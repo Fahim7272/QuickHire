@@ -90,17 +90,14 @@ export default function Signup() {
     return (
         <div style={{ minHeight: '100vh', background: '#F1F2F4', display: 'flex', flexDirection: 'column' }}>
             <header style={{ background: '#fff', borderBottom: '1px solid #D6DDEB' }}>
-                <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 124px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} className="qh-auth-header-inner">
+                <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 124px', height: 64, display: 'flex', alignItems: 'center' }} className="qh-auth-header-inner">
                     <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
                         <img src={quickhireLogo} alt="QuickHire" style={{ width: 32, height: 32, objectFit: 'contain' }} />
                         <span style={{ fontSize: 18, fontWeight: 800, color: '#25324B', fontFamily: "'Red Hat Display', sans-serif" }}>QuickHire</span>
                     </Link>
-                    <p style={{ fontSize: 14, color: '#7C8493' }}>
-                        Already have an account?{' '}
-                        <Link to="/login" style={{ color: '#4640DE', fontWeight: 700, textDecoration: 'none' }}>Log in</Link>
-                    </p>
                 </div>
             </header>
+
 
             <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
                 <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 16, padding: '40px 40px', width: '100%', maxWidth: 480, boxShadow: '0 4px 24px rgba(37,50,75,0.06)' }}>

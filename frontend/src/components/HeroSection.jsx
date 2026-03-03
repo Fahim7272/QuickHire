@@ -29,7 +29,8 @@ export default function HeroSection() {
     const popularTags = ['UI Designer', 'UX Researcher', 'Android', 'Admin'];
 
     return (
-        <section style={{ background: '#F1F2F4', position: 'relative', overflow: 'hidden' }}>
+        <section style={{ background: '#F8F8FD', position: 'relative', overflow: 'hidden', height: 680 }}>
+
             {/* Background pattern */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <img
@@ -39,29 +40,31 @@ export default function HeroSection() {
                 />
             </div>
 
-            {/* Main content — 1440px / 124px layout */}
-            <div style={{
-                maxWidth: 1440,
-                margin: '0 auto',
-                padding: '80px 124px 0',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'flex-end',  /* ← both columns align to bottom */
-                gap: 48,
-                position: 'relative',
-                zIndex: 10,
-            }} className="qh-hero-inner">
-
+            {/* Main content — 1440px / 124px, full section height, bottom-aligned */}
+            <div
+                className="qh-hero-inner"
+                style={{
+                    maxWidth: 1440,
+                    margin: '0 auto',
+                    padding: '0 124px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-end',   /* both columns sit at the bottom */
+                    height: '100%',           /* fill the 794px section */
+                    position: 'relative',
+                    zIndex: 10,
+                }}
+            >
                 {/* ── Left: Text + Search ── */}
-                <div style={{ flex: 1, maxWidth: 560, paddingBottom: 64 }}>
+                <div style={{ flex: '0 0 auto', maxWidth: 540, paddingBottom: 72 }}>
                     <h1
                         style={{
                             fontSize: 'clamp(40px, 5vw, 72px)',
-                            fontWeight: 800,
+                            fontWeight: 600,
                             color: '#25324B',
                             lineHeight: 1.12,
                             marginBottom: 16,
-                            fontFamily: "'Epilogue', sans-serif",
+                            fontFamily: "'ClashDisplay', 'Epilogue', sans-serif",
                             letterSpacing: '-0.02em',
                         }}
                     >
@@ -88,17 +91,19 @@ export default function HeroSection() {
                         onSubmit={handleSearch}
                         style={{
                             background: '#fff',
-                            borderRadius: 8,
+                            borderRadius: 0,
                             display: 'flex',
                             alignItems: 'center',
                             overflow: 'visible',
                             boxShadow: '0 2px 12px rgba(37,50,75,0.08)',
                             marginBottom: 20,
-                            border: '1px solid #D6DDEB',
+                            border: 'none',
+                            outline: 'none',
                         }}
                     >
                         {/* Keyword input */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', flex: 1, minWidth: 0, borderRight: '1px solid #D6DDEB' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', flex: 1, minWidth: 0, borderRight: '1px solid #E8ECF3' }}>
+
                             <Search size={18} color="#9199A3" style={{ flexShrink: 0 }} />
                             <input
                                 type="text"
@@ -135,7 +140,7 @@ export default function HeroSection() {
                                 <div style={{
                                     position: 'absolute', top: 'calc(100% + 4px)', left: 0,
                                     background: '#fff', border: '1px solid #D6DDEB',
-                                    borderRadius: 8, boxShadow: '0 8px 24px rgba(37,50,75,0.12)',
+                                    borderRadius: 0, boxShadow: '0 8px 24px rgba(37,50,75,0.12)',
                                     zIndex: 50, minWidth: 180, padding: '4px 0',
                                 }}>
                                     {locations.map(loc => (
@@ -169,7 +174,7 @@ export default function HeroSection() {
                                 padding: '17px 24px',
                                 fontSize: 15, fontWeight: 700, whiteSpace: 'nowrap',
                                 fontFamily: "'Epilogue', sans-serif",
-                                borderRadius: '0 7px 7px 0',
+                                borderRadius: 0,
                                 transition: 'background 150ms',
                                 flexShrink: 0,
                             }}
@@ -204,19 +209,24 @@ export default function HeroSection() {
                     </p>
                 </div>
 
-                {/* ── Right: Hero person image — sits at bottom edge ── */}
-                <div style={{ flexShrink: 0, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                {/* ── Right: Hero person image — bottom-aligned, pushed to the right ── */}
+                <div style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    justifyContent: 'flex-end',  /* ← pushes image to the far right */
+                    paddingRight: 0,
+                    marginRight: -40,             /* slight bleed so image anchors to the right edge */
+                }}>
                     <img
                         src={heroPerson}
                         alt="Professional pointing to QuickHire"
                         style={{
-                            /* Larger size to touch the bottom edge like Figma */
-                            height: 'clamp(380px, 45vw, 560px)',
+                            height: 'clamp(480px, 55vw, 680px)',  /* larger to fill the 794px section */
                             width: 'auto',
                             objectFit: 'contain',
-                            objectPosition: 'bottom',
+                            objectPosition: 'bottom right',
                             display: 'block',
-                            /* No bottom padding so image edge is flush with section bottom */
                             marginBottom: 0,
                         }}
                     />
@@ -229,9 +239,11 @@ export default function HeroSection() {
                         flex-direction: column !important;
                         align-items: flex-start !important;
                         padding: 48px 24px 0 !important;
+                        height: auto !important;
                     }
                     .qh-hero-inner > div:last-child {
                         align-self: center;
+                        margin-right: 0 !important;
                     }
                     .qh-hero-inner > div:last-child img {
                         height: 320px !important;

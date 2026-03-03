@@ -11,7 +11,6 @@ export default function Navbar() {
     const navigate = useNavigate();
     const isActive = (path) => location.pathname === path;
 
-    // React to login/logout events fired from auth.js
     useEffect(() => {
         const handler = () => setIsAdmin(isAdminLoggedIn());
         window.addEventListener('qh-auth-change', handler);
@@ -28,8 +27,11 @@ export default function Navbar() {
         <Link to={to} onClick={() => setMenuOpen(false)}
             style={{
                 color: isActive(to) ? '#4640DE' : '#515B6F',
-                textDecoration: 'none', fontSize: 14, fontWeight: isActive(to) ? 700 : 500,
-                padding: '6px 4px', borderBottom: isActive(to) ? '2px solid #4640DE' : '2px solid transparent',
+                textDecoration: 'none',
+                fontSize: 14,
+                fontWeight: isActive(to) ? 700 : 500,
+                padding: '6px 4px',
+                borderBottom: isActive(to) ? '2px solid #4640DE' : '2px solid transparent',
                 transition: 'color 150ms, border-color 150ms',
             }}
             onMouseEnter={e => { e.currentTarget.style.color = '#4640DE'; }}
@@ -39,7 +41,7 @@ export default function Navbar() {
     );
 
     return (
-        <nav style={{ background: '#fff', borderBottom: '1px solid #D6DDEB', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 1px 4px rgba(15,23,42,0.06)' }}>
+        <nav style={{ background: '#F8F8FD', borderBottom: '1px solid #D6DDEB', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 1px 4px rgba(15,23,42,0.04)' }}>
             <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 124px', height: 64, display: 'flex', alignItems: 'center', gap: 0 }} className="qh-nav-inner">
 
                 {/* Logo */}
@@ -48,24 +50,26 @@ export default function Navbar() {
                     <span style={{ fontSize: 18, fontWeight: 800, color: '#25324B', fontFamily: "'Red Hat Display', sans-serif" }}>QuickHire</span>
                 </Link>
 
-                {/* Desktop: Nav links LEFT-ALIGNED with logo */}
+                {/* Nav links left-aligned */}
                 <div className="qh-desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: 28, flex: 1 }}>
                     {navLink('/jobs', 'Find Jobs')}
                     {navLink('/companies', 'Browse Companies')}
                 </div>
 
-                {/* Auth buttons — changes based on admin state */}
-                <div className="qh-desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+                {/* Auth buttons */}
+                <div className="qh-desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: 0, flexShrink: 0 }}>
                     {isAdmin ? (
                         <>
                             <Link to="/admin"
-                                style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#4640DE', textDecoration: 'none', fontSize: 14, fontWeight: 700, padding: '8px 16px', borderRadius: 8, border: '1.5px solid #4640DE', transition: 'all 150ms' }}
-                                onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                                style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#4640DE', textDecoration: 'none', fontSize: 15, fontWeight: 700, padding: '8px 20px', fontFamily: "'Epilogue', sans-serif", transition: 'opacity 150ms' }}
+                                onMouseEnter={e => { e.currentTarget.style.opacity = '0.8'; }}
+                                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
                                 <LayoutDashboard size={15} /> Dashboard
                             </Link>
+                            {/* vertical divider */}
+                            <div style={{ width: 1, height: 28, background: '#C8C8D4', alignSelf: 'center', flexShrink: 0 }} />
                             <button onClick={handleLogout}
-                                style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#4640DE', color: '#fff', border: 'none', fontSize: 14, fontWeight: 700, padding: '9px 20px', borderRadius: 8, cursor: 'pointer', boxShadow: '0 2px 8px rgba(70,64,222,0.3)', transition: 'all 150ms', fontFamily: 'inherit' }}
+                                style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#4640DE', color: '#fff', border: 'none', fontSize: 15, fontWeight: 700, padding: '10px 24px', cursor: 'pointer', fontFamily: "'Epilogue', sans-serif", transition: 'background 150ms', borderRadius: 0 }}
                                 onMouseEnter={e => { e.currentTarget.style.background = '#3730c0'; }}
                                 onMouseLeave={e => { e.currentTarget.style.background = '#4640DE'; }}>
                                 <LogOut size={15} /> Logout
@@ -73,16 +77,20 @@ export default function Navbar() {
                         </>
                     ) : (
                         <>
+                            {/* Login — plain bold Epilogue text, no border */}
                             <Link to="/login"
-                                style={{ color: '#4640DE', textDecoration: 'none', fontSize: 14, fontWeight: 700, padding: '8px 16px', borderRadius: 8, border: '1.5px solid #4640DE', transition: 'all 150ms' }}
-                                onMouseEnter={e => { e.currentTarget.style.background = '#EEF2FF'; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}>
+                                style={{ color: '#4640DE', textDecoration: 'none', fontSize: 15, fontWeight: 700, padding: '8px 20px', fontFamily: "'Epilogue', sans-serif", transition: 'opacity 150ms' }}
+                                onMouseEnter={e => { e.currentTarget.style.opacity = '0.75'; }}
+                                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}>
                                 Login
                             </Link>
+                            {/* Vertical divider — perfectly centered */}
+                            <div style={{ width: 1, height: 28, background: '#C8C8D4', alignSelf: 'center', flexShrink: 0 }} />
+                            {/* Sign Up — solid filled #4640DE, sharp corners, Epilogue */}
                             <Link to="/signup"
-                                style={{ background: '#4640DE', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700, padding: '9px 20px', borderRadius: 8, boxShadow: '0 2px 8px rgba(70,64,222,0.3)', transition: 'all 150ms' }}
-                                onMouseEnter={e => { e.currentTarget.style.background = '#3730c0'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(70,64,222,0.45)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.background = '#4640DE'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(70,64,222,0.3)'; }}>
+                                style={{ background: '#4640DE', color: '#fff', textDecoration: 'none', fontSize: 15, fontWeight: 700, padding: '10px 24px', fontFamily: "'Epilogue', sans-serif", transition: 'background 150ms', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 0 }}
+                                onMouseEnter={e => { e.currentTarget.style.background = '#3730c0'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = '#4640DE'; }}>
                                 Sign Up
                             </Link>
                         </>
@@ -100,7 +108,7 @@ export default function Navbar() {
 
             {/* Mobile drawer */}
             {menuOpen && (
-                <div style={{ background: '#fff', borderTop: '1px solid #D6DDEB', padding: '12px 24px 20px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <div style={{ background: '#F8F8FD', borderTop: '1px solid #D6DDEB', padding: '12px 24px 20px', display: 'flex', flexDirection: 'column', gap: 2 }}>
                     {[{ to: '/jobs', label: 'Find Jobs' }, { to: '/companies', label: 'Browse Companies' }].map(({ to, label }) => (
                         <Link key={to} to={to} onClick={() => setMenuOpen(false)}
                             style={{ color: isActive(to) ? '#4640DE' : '#475569', textDecoration: 'none', fontSize: 15, fontWeight: isActive(to) ? 700 : 500, padding: '12px 8px', borderRadius: 8 }}>
@@ -112,22 +120,22 @@ export default function Navbar() {
                         {isAdmin ? (
                             <>
                                 <Link to="/admin" onClick={() => setMenuOpen(false)}
-                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', border: '1.5px solid #4640DE', borderRadius: 10, color: '#4640DE', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>
+                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', border: '1.5px solid #4640DE', color: '#4640DE', textDecoration: 'none', fontSize: 14, fontWeight: 700, borderRadius: 0 }}>
                                     Dashboard
                                 </Link>
                                 <button onClick={handleLogout}
-                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', background: '#4640DE', borderRadius: 10, color: '#fff', border: 'none', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', background: '#4640DE', color: '#fff', border: 'none', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', borderRadius: 0 }}>
                                     Logout
                                 </button>
                             </>
                         ) : (
                             <>
                                 <Link to="/login" onClick={() => setMenuOpen(false)}
-                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', border: '1.5px solid #4640DE', borderRadius: 10, color: '#4640DE', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>
+                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', color: '#4640DE', textDecoration: 'none', fontSize: 14, fontWeight: 700, border: '1.5px solid #4640DE', borderRadius: 0 }}>
                                     Login
                                 </Link>
                                 <Link to="/signup" onClick={() => setMenuOpen(false)}
-                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', background: '#4640DE', borderRadius: 10, color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700 }}>
+                                    style={{ flex: 1, textAlign: 'center', padding: '11px 0', background: '#4640DE', color: '#fff', textDecoration: 'none', fontSize: 14, fontWeight: 700, borderRadius: 0 }}>
                                     Sign Up
                                 </Link>
                             </>
