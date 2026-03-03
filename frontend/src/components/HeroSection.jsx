@@ -43,8 +43,8 @@ export default function HeroSection() {
                 {/* Left Content */}
                 <div className="flex-1 max-w-xl">
                     <h1
-                        className="text-4xl md:text-5xl lg:text-6xl font-semibold text-[#25324B] leading-tight mb-4"
-                        style={{ fontFamily: "'Clash Display', sans-serif" }}
+                        className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#25324B] leading-tight mb-4"
+                        style={{ fontFamily: "'Epilogue', sans-serif" }}
                     >
                         Discover <br />
                         more than <br />

@@ -28,7 +28,7 @@ export default function FeaturedJobs() {
             <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px]">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-10">
-                    <h2 className="text-3xl md:text-4xl font-semibold text-[#25324B]" style={{ fontFamily: "'Clash Display', sans-serif" }}>
+                    <h2 className="text-3xl md:text-4xl font-extrabold text-[#25324B]" style={{ fontFamily: 'Epilogue, sans-serif' }}>
                         Featured <span className="text-[#26A4FF]">jobs</span>
                     </h2>
                     <button

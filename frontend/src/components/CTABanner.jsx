@@ -25,8 +25,8 @@ export default function CTABanner() {
                     {/* Left: Text — sits on the indigo side */}
                     <div className="relative z-10 flex flex-col justify-center h-full p-10 md:p-14 md:w-1/2" style={{ minHeight: '320px' }}>
                         <h2
-                            className="text-3xl md:text-4xl font-semibold text-white leading-tight mb-3"
-                            style={{ fontFamily: "'Clash Display', sans-serif" }}
+                            className="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-3"
+                            style={{ fontFamily: 'Epilogue, sans-serif' }}
                         >
                             Start posting <br />jobs today
                         </h2>
