@@ -39,7 +39,7 @@ export default function HeroSection() {
                 />
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 py-16 md:py-20 flex flex-col md:flex-row items-center gap-8 relative z-10">
+            <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-16 md:py-20 flex flex-col md:flex-row items-center gap-8 relative z-10">
                 {/* Left Content */}
                 <div className="flex-1 max-w-xl">
                     <h1

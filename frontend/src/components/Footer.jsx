@@ -14,7 +14,7 @@ export default function Footer() {
     return (
         <footer className="bg-[#202430] text-white">
             {/* Main footer content */}
-            <div className="max-w-7xl mx-auto px-6 py-16">
+            <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-16">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
                     {/* Brand */}
                     <div className="md:col-span-1">
@@ -87,7 +87,7 @@ export default function Footer() {
 
             {/* Bottom bar */}
             <div className="border-t border-[#363A49]">
-                <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-[#9E9E9E] text-sm">
                         2021 @ QuickHire. All rights reserved.
                     </p>

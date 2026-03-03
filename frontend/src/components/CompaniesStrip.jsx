@@ -15,7 +15,7 @@ const companies = [
 export default function CompaniesStrip() {
     return (
         <section className="bg-white border-b border-gray-100 py-10">
-            <div className="max-w-7xl mx-auto px-6">
+            <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px]">
                 <p className="text-[#9199A3] text-sm mb-6" style={{ fontFamily: "'Epilogue', sans-serif" }}>
                     Companies we helped grow
                 </p>

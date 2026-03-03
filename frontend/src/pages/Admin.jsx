@@ -130,7 +130,7 @@ export default function Admin() {
 
                 {/* Admin Header */}
                 <div className="bg-white border-b border-[#D6DDEB]">
-                    <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+                    <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-6 flex items-center justify-between">
                         <div>
                             <h1 className="text-2xl font-extrabold text-[#25324B]" style={{ fontFamily: 'Epilogue, sans-serif' }}>
                                 Admin Dashboard
@@ -147,7 +147,7 @@ export default function Admin() {
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-6 py-8">
+                <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-8">
                     {/* Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         {[

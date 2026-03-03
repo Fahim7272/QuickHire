@@ -50,7 +50,7 @@ export default function JobListings() {
             <main className="min-h-screen bg-[#F1F2F4]">
                 {/* Page Header */}
                 <div className="bg-white border-b border-[#D6DDEB] py-10">
-                    <div className="max-w-7xl mx-auto px-6">
+                    <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px]">
                         <h1 className="text-3xl font-extrabold text-[#25324B] mb-2" style={{ fontFamily: 'Epilogue, sans-serif' }}>
                             Find your <span className="text-[#26A4FF]">dream job</span>
                         </h1>
@@ -108,7 +108,7 @@ export default function JobListings() {
                     </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-6 py-8">
+                <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-8">
                     <div className="flex flex-col md:flex-row gap-6">
                         {/* Sidebar Filters */}
                         <aside className="md:w-60 shrink-0">
@@ -123,8 +123,8 @@ export default function JobListings() {
                                             key={cat}
                                             onClick={() => setCategory(cat)}
                                             className={`text-left px-3 py-2 rounded text-sm font-medium transition-colors ${category === cat
-                                                    ? 'bg-[#4640DE] text-white'
-                                                    : 'text-[#515B6F] hover:bg-[#F1F2F4]'
+                                                ? 'bg-[#4640DE] text-white'
+                                                : 'text-[#515B6F] hover:bg-[#F1F2F4]'
                                                 }`}
                                         >
                                             {cat}

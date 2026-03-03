@@ -9,7 +9,7 @@ export default function Navbar() {
 
     return (
         <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-4 flex items-center justify-between">
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 no-underline">
                     <img
