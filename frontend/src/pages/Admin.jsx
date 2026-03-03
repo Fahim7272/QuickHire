@@ -5,6 +5,7 @@ import { mockJobs } from '../services/mockData';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { isAdminLoggedIn, loginAsAdmin } from '../services/auth';
 
 const ADMIN_PIN = '1234';
 const CATEGORIES = ['Design', 'Sales', 'Marketing', 'Finance', 'Technology', 'Engineering', 'Business', 'Human Resource'];
@@ -308,11 +309,16 @@ function JobsTable({ jobs, loading, onDelete }) {
 }
 
 export default function Admin() {
-    const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem('admin_ok') === '1');
+    // Pre-unlocked if arriving via Login with admin@admin.com
+    const [unlocked, setUnlocked] = useState(() => isAdminLoggedIn() || sessionStorage.getItem('admin_ok') === '1');
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const handleUnlock = () => { sessionStorage.setItem('admin_ok', '1'); setUnlocked(true); };
+    const handleUnlock = () => {
+        loginAsAdmin(); // also persist in localStorage for Navbar
+        sessionStorage.setItem('admin_ok', '1');
+        setUnlocked(true);
+    };
 
     const loadJobs = async () => {
         try {

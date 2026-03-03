@@ -89,7 +89,7 @@ export default function LatestJobs() {
                                     {job.company} &bull; {job.location}
                                 </p>
                                 <div className="flex flex-wrap gap-2">
-                                    <span className={`text-xs font-medium px-3 py-1 rounded-full border ${tagColors['Full-Time']}`}>
+                                    <span className={`text-xs font-semibold px-3 rounded-full border ${tagColors['Full-Time']}`} style={{ display: 'inline-flex', alignItems: 'center', lineHeight: 1, paddingTop: 4, paddingBottom: 4 }}>
                                         {job.type || 'Full-Time'}
                                     </span>
                                     {(Array.isArray(job.tags) ? job.tags : [job.category]).map(tag => (

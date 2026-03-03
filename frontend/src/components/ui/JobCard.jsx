@@ -72,7 +72,9 @@ export function FeaturedJobCard({ job }) {
                 <span style={{
                     fontSize: 11, fontWeight: 700,
                     background: typeStyle.bg, color: typeStyle.text,
-                    borderRadius: 9999, padding: '3px 10px',
+                    borderRadius: 9999, padding: '4px 10px',
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    lineHeight: 1,
                 }}>
                     {job.type || 'Full Time'}
                 </span>
@@ -108,14 +110,16 @@ export function FeaturedJobCard({ job }) {
                 <span style={{
                     fontSize: 11, fontWeight: 700,
                     background: catStyle.bg, color: catStyle.text,
-                    borderRadius: 9999, padding: '3px 10px',
+                    borderRadius: 9999, padding: '4px 10px',
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    lineHeight: 1,
                 }}>
                     {job.category}
                 </span>
                 {Array.isArray(job.tags) && job.tags.filter(t => t !== job.category).slice(0, 1).map(tag => {
                     const ts = CATEGORY_COLORS[tag] || { bg: '#F1F5F9', text: '#475569' };
                     return (
-                        <span key={tag} style={{ fontSize: 11, fontWeight: 700, background: ts.bg, color: ts.text, borderRadius: 9999, padding: '3px 10px' }}>
+                        <span key={tag} style={{ fontSize: 11, fontWeight: 700, background: ts.bg, color: ts.text, borderRadius: 9999, padding: '4px 10px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}>
                             {tag}
                         </span>
                     );

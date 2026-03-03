@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, LogIn, Shield } from 'lucide-react';
 import quickhireLogo from '../assets/quickhire-logo.png';
+import { loginAsAdmin, isAdminLoggedIn } from '../services/auth';
+
 
 const ADMIN_DOMAIN = '@admin.com';
 
@@ -32,6 +34,11 @@ export default function Login() {
         setApiError('');
     };
 
+    // If already logged in as admin, redirect immediately — no login page again
+    useEffect(() => {
+        if (isAdminLoggedIn()) navigate('/admin', { replace: true });
+    }, []);
+
     const handleSubmit = async e => {
         e.preventDefault();
         const emailErr = validate('email', form.email);
@@ -39,8 +46,12 @@ export default function Login() {
         if (emailErr || pwErr) { setErrors({ email: emailErr, password: pwErr }); return; }
         setSubmitting(true);
         await new Promise(r => setTimeout(r, 800));
-        if (isAdminEmail) navigate('/admin');
-        else navigate('/');
+        if (isAdminEmail) {
+            loginAsAdmin(); // set localStorage so Navbar shows Dashboard/Logout
+            navigate('/admin');
+        } else {
+            navigate('/');
+        }
         setSubmitting(false);
     };
 

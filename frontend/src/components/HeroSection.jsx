@@ -29,83 +29,129 @@ export default function HeroSection() {
     const popularTags = ['UI Designer', 'UX Researcher', 'Android', 'Admin'];
 
     return (
-        <section className="bg-[#F1F2F4] relative overflow-hidden">
-            {/* Background pattern from assets */}
-            <div className="absolute inset-0 pointer-events-none">
+        <section style={{ background: '#F1F2F4', position: 'relative', overflow: 'hidden' }}>
+            {/* Background pattern */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <img
                     src={bgPattern}
                     alt=""
-                    className="absolute right-0 top-0 h-full w-auto object-cover opacity-60"
+                    style={{ position: 'absolute', right: 0, top: 0, height: '100%', width: 'auto', objectFit: 'cover', opacity: 0.6 }}
                 />
             </div>
 
-            <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-16 md:py-20 flex flex-col md:flex-row items-center gap-8 relative z-10">
-                {/* Left Content */}
-                <div className="flex-1 max-w-xl">
+            {/* Main content — 1440px / 124px layout */}
+            <div style={{
+                maxWidth: 1440,
+                margin: '0 auto',
+                padding: '80px 124px 0',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'flex-end',  /* ← both columns align to bottom */
+                gap: 48,
+                position: 'relative',
+                zIndex: 10,
+            }} className="qh-hero-inner">
+
+                {/* ── Left: Text + Search ── */}
+                <div style={{ flex: 1, maxWidth: 560, paddingBottom: 64 }}>
                     <h1
-                        className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#25324B] leading-tight mb-4"
-                        style={{ fontFamily: "'Epilogue', sans-serif" }}
+                        style={{
+                            fontSize: 'clamp(40px, 5vw, 72px)',
+                            fontWeight: 800,
+                            color: '#25324B',
+                            lineHeight: 1.12,
+                            marginBottom: 16,
+                            fontFamily: "'Epilogue', sans-serif",
+                            letterSpacing: '-0.02em',
+                        }}
                     >
-                        Discover <br />
-                        more than <br />
-                        <span className="text-[#26A4FF]">5000+ Jobs</span>
+                        Discover<br />
+                        more than<br />
+                        <span style={{ color: '#26A4FF' }}>5000+ Jobs</span>
                     </h1>
 
-                    {/* Underline image from assets */}
-                    <div className="mb-6 -mt-2">
-                        <img
-                            src={underlineLine}
-                            alt=""
-                            className="w-64 object-contain"
-                        />
+                    {/* Underline squiggle from assets */}
+                    <div style={{ marginBottom: 24, marginTop: -8 }}>
+                        <img src={underlineLine} alt="" style={{ width: 260, objectFit: 'contain' }} />
                     </div>
 
-                    <p className="text-[#515B6F] text-base leading-relaxed mb-8 max-w-sm" style={{ fontFamily: "'Epilogue', sans-serif" }}>
+                    <p style={{
+                        color: '#515B6F', fontSize: 16, lineHeight: 1.7,
+                        marginBottom: 40, maxWidth: 400,
+                        fontFamily: "'Epilogue', sans-serif",
+                    }}>
                         Great platform for the job seeker that searching for new career heights and passionate about startups.
                     </p>
 
-                    {/* Search Bar */}
+                    {/* ─── Search Bar — matches reference image ─── */}
                     <form
                         onSubmit={handleSearch}
-                        className="bg-white rounded-lg shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center gap-0 mb-4 overflow-hidden border border-gray-100"
+                        style={{
+                            background: '#fff',
+                            borderRadius: 8,
+                            display: 'flex',
+                            alignItems: 'center',
+                            overflow: 'visible',
+                            boxShadow: '0 2px 12px rgba(37,50,75,0.08)',
+                            marginBottom: 20,
+                            border: '1px solid #D6DDEB',
+                        }}
                     >
-                        {/* Keyword Input */}
-                        <div className="flex items-center gap-3 px-4 py-4 flex-1 min-w-0">
-                            <Search size={20} className="text-[#9199A3] shrink-0" />
+                        {/* Keyword input */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', flex: 1, minWidth: 0, borderRight: '1px solid #D6DDEB' }}>
+                            <Search size={18} color="#9199A3" style={{ flexShrink: 0 }} />
                             <input
                                 type="text"
                                 placeholder="Job title or keyword"
                                 value={keyword}
                                 onChange={e => setKeyword(e.target.value)}
-                                className="outline-none border-none bg-transparent text-[#515B6F] text-sm w-full placeholder-[#9199A3]"
-                                style={{ fontFamily: "'Epilogue', sans-serif" }}
+                                style={{
+                                    border: 'none', outline: 'none', background: 'transparent',
+                                    color: '#515B6F', fontSize: 14, width: '100%',
+                                    padding: '17px 0',
+                                    fontFamily: "'Epilogue', sans-serif",
+                                }}
                             />
                         </div>
 
-                        {/* Divider */}
-                        <div className="hidden sm:block w-px h-10 bg-[#D6DDEB] self-center"></div>
-
-                        {/* Location Dropdown */}
-                        <div className="relative">
+                        {/* Location dropdown */}
+                        <div style={{ position: 'relative', flexShrink: 0 }}>
                             <button
                                 type="button"
                                 onClick={() => setLocOpen(!locOpen)}
-                                className="flex items-center gap-2 px-4 py-4 text-[#515B6F] text-sm whitespace-nowrap w-full sm:w-auto"
-                                style={{ fontFamily: "'Epilogue', sans-serif" }}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: 8,
+                                    padding: '17px 16px',
+                                    background: 'transparent', border: 'none', cursor: 'pointer',
+                                    color: '#515B6F', fontSize: 14, whiteSpace: 'nowrap',
+                                    fontFamily: "'Epilogue', sans-serif",
+                                }}
                             >
-                                <MapPin size={18} className="text-[#9199A3]" />
+                                <MapPin size={18} color="#9199A3" />
                                 <span>{location}</span>
-                                <ChevronDown size={16} className="text-[#9199A3]" />
+                                <ChevronDown size={15} color="#9199A3" style={{ transition: 'transform 150ms', transform: locOpen ? 'rotate(180deg)' : 'rotate(0)' }} />
                             </button>
                             {locOpen && (
-                                <div className="absolute top-full left-0 bg-white border border-[#D6DDEB] rounded-lg shadow-lg z-50 min-w-48 py-1">
+                                <div style={{
+                                    position: 'absolute', top: 'calc(100% + 4px)', left: 0,
+                                    background: '#fff', border: '1px solid #D6DDEB',
+                                    borderRadius: 8, boxShadow: '0 8px 24px rgba(37,50,75,0.12)',
+                                    zIndex: 50, minWidth: 180, padding: '4px 0',
+                                }}>
                                     {locations.map(loc => (
                                         <button
                                             key={loc}
                                             type="button"
-                                            className="w-full text-left px-4 py-2.5 text-sm text-[#515B6F] hover:bg-[#F1F2F4] transition-colors"
+                                            style={{
+                                                width: '100%', textAlign: 'left',
+                                                padding: '10px 16px', border: 'none',
+                                                background: loc === location ? '#F1F2F4' : 'transparent',
+                                                color: loc === location ? '#4640DE' : '#515B6F',
+                                                fontSize: 14, cursor: 'pointer',
+                                                fontFamily: "'Epilogue', sans-serif",
+                                                fontWeight: loc === location ? 700 : 400,
+                                            }}
                                             onClick={() => { setLocation(loc); setLocOpen(false); }}
-                                            style={{ fontFamily: "'Epilogue', sans-serif" }}
                                         >
                                             {loc}
                                         </button>
@@ -114,25 +160,41 @@ export default function HeroSection() {
                             )}
                         </div>
 
-                        {/* Search Button */}
+                        {/* Search button */}
                         <button
                             type="submit"
-                            className="bg-[#4640DE] hover:bg-[#3730c0] text-white font-semibold text-sm px-6 py-4 transition-colors whitespace-nowrap"
-                            style={{ fontFamily: "'Epilogue', sans-serif" }}
+                            style={{
+                                background: '#4640DE', color: '#fff',
+                                border: 'none', cursor: 'pointer',
+                                padding: '17px 24px',
+                                fontSize: 15, fontWeight: 700, whiteSpace: 'nowrap',
+                                fontFamily: "'Epilogue', sans-serif",
+                                borderRadius: '0 7px 7px 0',
+                                transition: 'background 150ms',
+                                flexShrink: 0,
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#3730c0'}
+                            onMouseLeave={e => e.currentTarget.style.background = '#4640DE'}
                         >
                             Search my job
                         </button>
                     </form>
 
                     {/* Popular tags */}
-                    <p className="text-[#515B6F] text-sm" style={{ fontFamily: "'Epilogue', sans-serif" }}>
-                        <span className="font-semibold">Popular :</span>{' '}
+                    <p style={{ color: '#515B6F', fontSize: 14, fontFamily: "'Epilogue', sans-serif" }}>
+                        <span style={{ fontWeight: 600 }}>Popular :</span>{' '}
                         {popularTags.map((tag, i) => (
                             <span key={tag}>
                                 <button
                                     onClick={() => navigate(`/jobs?search=${tag}`)}
-                                    className="text-[#515B6F] hover:text-[#4640DE] transition-colors"
-                                    style={{ fontFamily: "'Epilogue', sans-serif" }}
+                                    style={{
+                                        background: 'none', border: 'none', cursor: 'pointer',
+                                        color: '#515B6F', fontSize: 14,
+                                        fontFamily: "'Epilogue', sans-serif",
+                                        padding: 0, transition: 'color 150ms',
+                                    }}
+                                    onMouseEnter={e => e.currentTarget.style.color = '#4640DE'}
+                                    onMouseLeave={e => e.currentTarget.style.color = '#515B6F'}
                                 >
                                     {tag}
                                 </button>
@@ -142,16 +204,40 @@ export default function HeroSection() {
                     </p>
                 </div>
 
-                {/* Right: Hero Person Image — actual WebP/PNG from assets */}
-                <div className="flex-1 flex justify-center md:justify-end items-end relative">
+                {/* ── Right: Hero person image — sits at bottom edge ── */}
+                <div style={{ flexShrink: 0, display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                     <img
                         src={heroPerson}
                         alt="Professional pointing to QuickHire"
-                        className="relative z-10 w-72 md:w-80 lg:w-96 object-contain drop-shadow-xl"
-                        style={{ maxHeight: '500px' }}
+                        style={{
+                            /* Larger size to touch the bottom edge like Figma */
+                            height: 'clamp(380px, 45vw, 560px)',
+                            width: 'auto',
+                            objectFit: 'contain',
+                            objectPosition: 'bottom',
+                            display: 'block',
+                            /* No bottom padding so image edge is flush with section bottom */
+                            marginBottom: 0,
+                        }}
                     />
                 </div>
             </div>
+
+            <style>{`
+                @media (max-width: 900px) {
+                    .qh-hero-inner {
+                        flex-direction: column !important;
+                        align-items: flex-start !important;
+                        padding: 48px 24px 0 !important;
+                    }
+                    .qh-hero-inner > div:last-child {
+                        align-self: center;
+                    }
+                    .qh-hero-inner > div:last-child img {
+                        height: 320px !important;
+                    }
+                }
+            `}</style>
         </section>
     );
 }

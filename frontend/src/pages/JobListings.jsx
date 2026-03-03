@@ -115,7 +115,10 @@ export default function JobListings() {
                         </nav>
                         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
                             <div>
-                                <h1 style={{ fontSize: 26, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: 4 }}>Find your perfect job</h1>
+                                <h1 style={{ fontSize: 26, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 4, fontFamily: "'Epilogue', sans-serif" }}>
+                                    Find your <span style={{ color: '#26A4FF' }}>perfect job</span>
+                                </h1>
+
                                 <p style={{ fontSize: 13, color: '#94A3B8' }}>
                                     {loading ? 'Loading…' : `${meta.total || jobs.length} job${(meta.total || jobs.length) !== 1 ? 's' : ''} available`}
                                     {activeFilters.length > 0 && <span style={{ color: '#4F46E5', fontWeight: 600 }}> · {activeFilters.length} filter{activeFilters.length > 1 ? 's' : ''} active</span>}
