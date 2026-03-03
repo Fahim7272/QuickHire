@@ -1,182 +1,323 @@
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, X, Filter } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import JobCard from '../components/JobCard';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Search, X, SlidersHorizontal, Briefcase, AlertCircle } from 'lucide-react';
 import { getJobs } from '../services/api';
 import { mockJobs } from '../services/mockData';
+import { FeaturedJobCard } from '../components/ui/JobCard';
+import { SkeletonCard } from '../components/ui/LoadingSpinner';
 
-const categories = ['All', 'Design', 'Sales', 'Marketing', 'Finance', 'Technology', 'Engineering', 'Business', 'Human Resource'];
-const locations = ['All Locations', 'Remote', 'New York, US', 'San Francisco, US', 'London, UK', 'Berlin, Germany', 'Paris, France', 'Madrid, Spain'];
+const CATEGORIES = ['Design', 'Sales', 'Marketing', 'Finance', 'Technology', 'Engineering', 'Business', 'Human Resource'];
+const TYPES = ['Full Time', 'Part Time', 'Remote', 'Internship', 'Contract'];
+const LOCATIONS = ['New York, US', 'San Francisco, US', 'London, UK', 'Berlin, Germany', 'Madrid, Spain', 'Remote', 'Toronto, Canada'];
+
+const CAT_COLORS = {
+    Marketing: '#F5A623', Design: '#1E6DB7', Business: '#4A5AE8',
+    Technology: '#C13B31', Engineering: '#1A7F4A', Finance: '#6B3FBF',
+    Sales: '#C02D7A', 'Human Resource': '#0A7FA3',
+};
 
 export default function JobListings() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [keyword, setKeyword] = useState(searchParams.get('search') || '');
-    const [category, setCategory] = useState(searchParams.get('category') || 'All');
-    const [location, setLocation] = useState(searchParams.get('location') || 'All Locations');
-    const [locOpen, setLocOpen] = useState(false);
+    const [error, setError] = useState('');
+    const [meta, setMeta] = useState({ total: 0, current_page: 1, last_page: 1 });
+    const [filtersOpen, setFiltersOpen] = useState(false);
+    const inputRef = useRef();
+
+    const keyword = searchParams.get('search') || '';
+    const category = searchParams.get('category') || '';
+    const location = searchParams.get('location') || '';
+    const type = searchParams.get('type') || '';
+    const page = parseInt(searchParams.get('page') || '1', 10);
+
+    const [inputKeyword, setInputKeyword] = useState(keyword);
 
     useEffect(() => {
-        setLoading(true);
-        getJobs({ search: keyword, category: category === 'All' ? '' : category, location: location === 'All Locations' ? '' : location })
-            .then(res => {
-                const data = res.data?.data || res.data || [];
-                setJobs(data.length ? data : filterMock());
-            })
-            .catch(() => setJobs(filterMock()))
-            .finally(() => setLoading(false));
-    }, [keyword, category, location]);
+        document.title = 'Find Jobs | QuickHire';
+    }, []);
 
-    const filterMock = () => {
-        return mockJobs.filter(j => {
-            const matchKeyword = !keyword || j.title.toLowerCase().includes(keyword.toLowerCase()) || j.company.toLowerCase().includes(keyword.toLowerCase());
-            const matchCat = category === 'All' || j.category === category;
-            const matchLoc = location === 'All Locations' || j.location.toLowerCase().includes(location.split(',')[0].toLowerCase());
-            return matchKeyword && matchCat && matchLoc;
-        });
+    useEffect(() => { setInputKeyword(keyword); }, [keyword]);
+
+    const fetchJobs = useCallback(async () => {
+        setLoading(true); setError('');
+        try {
+            const params = { page };
+            if (keyword) params.search = keyword.trim();
+            if (category) params.category = category;
+            if (location) params.location = location;
+            if (type) params.type = type;
+            const res = await getJobs(params);
+            const data = res.data?.data || res.data || [];
+            if (Array.isArray(data) && data.length > 0) {
+                setJobs(data);
+                setMeta(res.data?.meta || res.meta || { total: data.length, current_page: 1, last_page: 1 });
+            } else {
+                // Filter and show mock data
+                let filtered = mockJobs.filter(j => {
+                    const mk = !keyword || j.title.toLowerCase().includes(keyword.toLowerCase()) || j.company.toLowerCase().includes(keyword.toLowerCase());
+                    const mc = !category || j.category === category;
+                    const mt = !type || j.type === type;
+                    const ml = !location || j.location.toLowerCase().includes(location.toLowerCase());
+                    return mk && mc && mt && ml;
+                });
+                setJobs(filtered);
+                setMeta({ total: filtered.length, current_page: 1, last_page: 1 });
+            }
+        } catch {
+            let filtered = mockJobs.filter(j => {
+                const mk = !keyword || j.title.toLowerCase().includes(keyword.toLowerCase()) || j.company.toLowerCase().includes(keyword.toLowerCase());
+                const mc = !category || j.category === category;
+                const mt = !type || j.type === type;
+                const ml = !location || j.location.toLowerCase().includes(location.toLowerCase());
+                return mk && mc && mt && ml;
+            });
+            setJobs(filtered);
+            setMeta({ total: filtered.length, current_page: 1, last_page: 1 });
+        } finally { setLoading(false); }
+    }, [keyword, category, location, type, page]);
+
+    useEffect(() => { fetchJobs(); }, [fetchJobs]);
+
+    const updateParam = (key, value) => {
+        const next = new URLSearchParams(searchParams);
+        if (value) next.set(key, value); else next.delete(key);
+        next.delete('page');
+        setSearchParams(next);
     };
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        setSearchParams({ search: keyword, category, location });
-    };
+    const handleSearch = e => { e.preventDefault(); updateParam('search', inputKeyword.trim()); };
+    const clearAll = () => { setInputKeyword(''); setSearchParams({}); };
+
+    const activeFilters = [
+        keyword && { label: `"${keyword}"`, clear: () => { setInputKeyword(''); updateParam('search', ''); } },
+        category && { label: category, clear: () => updateParam('category', '') },
+        type && { label: type, clear: () => updateParam('type', '') },
+        location && { label: location, clear: () => updateParam('location', '') },
+    ].filter(Boolean);
 
     return (
-        <>
-            <Navbar />
-            <main className="min-h-screen bg-[#F1F2F4]">
-                {/* Page Header */}
-                <div className="bg-white border-b border-[#D6DDEB] py-10">
-                    <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px]">
-                        <h1 className="text-3xl font-extrabold text-[#25324B] mb-2" style={{ fontFamily: 'Epilogue, sans-serif' }}>
-                            Find your <span className="text-[#26A4FF]">dream job</span>
-                        </h1>
-                        <p className="text-[#515B6F] text-sm mb-6">
-                            {jobs.length} jobs available for you
-                        </p>
+        <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
 
-                        {/* Search Bar */}
-                        <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-sm flex flex-col sm:flex-row items-stretch border border-[#D6DDEB] overflow-hidden">
-                            <div className="flex items-center gap-3 px-4 py-3 flex-1">
-                                <Search size={18} className="text-[#9199A3] shrink-0" />
-                                <input
-                                    type="text"
-                                    placeholder="Job title or keyword"
-                                    value={keyword}
-                                    onChange={e => setKeyword(e.target.value)}
-                                    className="outline-none bg-transparent text-[#515B6F] text-sm w-full placeholder-[#9199A3]"
-                                />
-                                {keyword && (
-                                    <button type="button" onClick={() => setKeyword('')}>
-                                        <X size={16} className="text-[#9199A3]" />
-                                    </button>
-                                )}
-                            </div>
-                            <div className="hidden sm:block w-px h-10 bg-[#D6DDEB] self-center"></div>
-                            <div className="relative">
-                                <button
-                                    type="button"
-                                    onClick={() => setLocOpen(!locOpen)}
-                                    className="flex items-center gap-2 px-4 py-3 text-[#515B6F] text-sm whitespace-nowrap w-full sm:w-auto"
-                                >
-                                    <MapPin size={16} className="text-[#9199A3]" />
-                                    <span>{location}</span>
-                                    <ChevronDown size={14} className="text-[#9199A3]" />
-                                </button>
-                                {locOpen && (
-                                    <div className="absolute top-full left-0 bg-white border border-[#D6DDEB] rounded-lg shadow-lg z-50 min-w-48 py-1">
-                                        {locations.map(loc => (
-                                            <button
-                                                key={loc}
-                                                type="button"
-                                                className="w-full text-left px-4 py-2 text-sm text-[#515B6F] hover:bg-[#F1F2F4]"
-                                                onClick={() => { setLocation(loc); setLocOpen(false); }}
-                                            >
-                                                {loc}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                            <button type="submit" className="bg-[#4640DE] hover:bg-[#3730c0] text-white font-semibold text-sm px-6 py-3 transition-colors whitespace-nowrap">
-                                Search Jobs
-                            </button>
-                        </form>
+            {/* Page header */}
+            <div style={{ background: '#fff', borderBottom: '1px solid #F1F5F9', padding: '28px 0' }}>
+                <div style={{ maxWidth: 1152, margin: '0 auto', padding: '0 24px' }}>
+                    <nav aria-label="Breadcrumb" style={{ marginBottom: 10 }}>
+                        <ol style={{ display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: 0, fontSize: 12, color: '#94A3B8' }}>
+                            <li><Link to="/" style={{ color: '#94A3B8', textDecoration: 'none' }}>Home</Link></li>
+                            <li aria-hidden style={{ fontSize: 11 }}>›</li>
+                            <li style={{ color: '#4F46E5', fontWeight: 600 }}>Find Jobs</li>
+                        </ol>
+                    </nav>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                        <div>
+                            <h1 style={{ fontSize: 26, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: 4 }}>Find your perfect job</h1>
+                            <p style={{ fontSize: 13, color: '#94A3B8' }}>
+                                {loading ? 'Loading…' : `${meta.total || jobs.length} job${(meta.total || jobs.length) !== 1 ? 's' : ''} available`}
+                                {activeFilters.length > 0 && <span style={{ color: '#4F46E5', fontWeight: 600 }}> · {activeFilters.length} filter{activeFilters.length > 1 ? 's' : ''} active</span>}
+                            </p>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-8">
-                    <div className="flex flex-col md:flex-row gap-6">
-                        {/* Sidebar Filters */}
-                        <aside className="md:w-60 shrink-0">
-                            <div className="bg-white rounded-lg border border-[#D6DDEB] p-5">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <Filter size={16} className="text-[#4640DE]" />
-                                    <h3 className="font-bold text-[#25324B] text-sm">Category</h3>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    {categories.map(cat => (
-                                        <button
-                                            key={cat}
-                                            onClick={() => setCategory(cat)}
-                                            className={`text-left px-3 py-2 rounded text-sm font-medium transition-colors ${category === cat
-                                                ? 'bg-[#4640DE] text-white'
-                                                : 'text-[#515B6F] hover:bg-[#F1F2F4]'
-                                                }`}
-                                        >
+            <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px' }}>
+
+                {/* Search + Filters Panel */}
+                <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 14, padding: '16px 20px', marginBottom: 20, boxShadow: '0 2px 8px rgba(15,23,42,0.04)' }}>
+
+                    <form onSubmit={handleSearch} style={{ display: 'flex', gap: 10 }} role="search">
+                        <div style={{
+                            flex: 1, display: 'flex', alignItems: 'center', gap: 10,
+                            border: '1.5px solid #E2E8F0', borderRadius: 10, padding: '0 14px',
+                            transition: 'border-color 150ms ease, box-shadow 150ms ease', background: '#F8FAFC',
+                        }}
+                            onFocusCapture={e => { e.currentTarget.style.borderColor = '#4F46E5'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(79,70,229,0.1)'; e.currentTarget.style.background = '#fff'; }}
+                            onBlurCapture={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#F8FAFC'; }}
+                        >
+                            <Search size={15} color="#94A3B8" style={{ flexShrink: 0 }} aria-hidden />
+                            <input
+                                ref={inputRef}
+                                type="search"
+                                placeholder="Search job title, company, or keyword…"
+                                value={inputKeyword}
+                                onChange={e => setInputKeyword(e.target.value)}
+                                style={{ flex: 1, border: 'none', outline: 'none', fontSize: 14, color: '#0F172A', background: 'transparent', padding: '13px 0', fontFamily: 'inherit' }}
+                                aria-label="Search jobs"
+                            />
+                            {inputKeyword && (
+                                <button type="button" onClick={() => { setInputKeyword(''); inputRef.current?.focus(); }}
+                                    style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 4, display: 'flex', borderRadius: 4 }}
+                                    aria-label="Clear search">
+                                    <X size={14} color="#94A3B8" />
+                                </button>
+                            )}
+                        </div>
+
+                        <button type="submit"
+                            style={{ background: 'linear-gradient(135deg, #4F46E5, #6366F1)', color: '#fff', border: 'none', borderRadius: 10, padding: '0 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44, transition: 'all 150ms ease' }}
+                            onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(79,70,229,0.4)'}
+                            onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
+                            Search
+                        </button>
+
+                        <button type="button" onClick={() => setFiltersOpen(!filtersOpen)}
+                            aria-expanded={filtersOpen}
+                            aria-controls="filter-panel"
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: 6, minHeight: 44,
+                                border: `1.5px solid ${filtersOpen ? '#4F46E5' : '#E2E8F0'}`,
+                                borderRadius: 10, padding: '0 16px', fontSize: 13, fontWeight: 700,
+                                color: filtersOpen ? '#4F46E5' : '#64748B',
+                                background: filtersOpen ? '#EEF2FF' : '#F8FAFC',
+                                cursor: 'pointer', transition: 'all 150ms ease', whiteSpace: 'nowrap',
+                            }}>
+                            <SlidersHorizontal size={15} />
+                            Filters {activeFilters.length > 0 && (
+                                <span style={{ background: '#4F46E5', color: '#fff', borderRadius: 9999, width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800 }}>
+                                    {activeFilters.length}
+                                </span>
+                            )}
+                        </button>
+                    </form>
+
+                    {/* Active filter chips */}
+                    {activeFilters.length > 0 && (
+                        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginTop: 12, paddingTop: 12, borderTop: '1px solid #F1F5F9' }}>
+                            <span style={{ fontSize: 11, color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Active:</span>
+                            {activeFilters.map((f, i) => (
+                                <button key={i} onClick={f.clear}
+                                    style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#EEF2FF', color: '#4338CA', border: '1px solid #C7D2FE', borderRadius: 9999, padding: '4px 10px 4px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all 150ms ease' }}
+                                    onMouseEnter={e => e.currentTarget.style.background = '#E0E7FF'}
+                                    onMouseLeave={e => e.currentTarget.style.background = '#EEF2FF'}>
+                                    {f.label} <X size={11} />
+                                </button>
+                            ))}
+                            <button onClick={clearAll}
+                                style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 12, color: '#EF4444', fontWeight: 700, marginLeft: 4, padding: '4px 8px', borderRadius: 6, transition: 'background 150ms' }}
+                                onMouseEnter={e => e.currentTarget.style.background = '#FEF2F2'}
+                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                Clear all ×
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Expandable filter panel */}
+                    {filtersOpen && (
+                        <div id="filter-panel" style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid #F1F5F9', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20, animation: 'slideDown 200ms ease both' }}>
+                            <div>
+                                <div style={{ fontSize: 10, fontWeight: 800, color: '#94A3B8', letterSpacing: '0.08em', marginBottom: 10, textTransform: 'uppercase' }}>Category</div>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                    {CATEGORIES.map(cat => (
+                                        <button key={cat} onClick={() => updateParam('category', category === cat ? '' : cat)}
+                                            style={{
+                                                padding: '5px 11px', borderRadius: 9999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                                                border: `1.5px solid ${category === cat ? CAT_COLORS[cat] || '#4F46E5' : '#E2E8F0'}`,
+                                                background: category === cat ? `${CAT_COLORS[cat]}18` || '#EEF2FF' : '#F8FAFC',
+                                                color: category === cat ? CAT_COLORS[cat] || '#4F46E5' : '#475569',
+                                                transition: 'all 150ms ease',
+                                            }}>
                                             {cat}
                                         </button>
                                     ))}
                                 </div>
                             </div>
-                        </aside>
 
-                        {/* Job Grid */}
-                        <div className="flex-1">
-                            {loading ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {[...Array(6)].map((_, i) => (
-                                        <div key={i} className="bg-white border border-[#D6DDEB] rounded-lg p-5 animate-pulse">
-                                            <div className="flex justify-between mb-4">
-                                                <div className="w-12 h-12 bg-gray-200 rounded-lg"></div>
-                                                <div className="w-20 h-6 bg-gray-200 rounded"></div>
-                                            </div>
-                                            <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                                            <div className="h-3 bg-gray-100 rounded mb-4 w-2/3"></div>
-                                            <div className="h-3 bg-gray-100 rounded mb-1"></div>
-                                            <div className="h-3 bg-gray-100 rounded w-4/5"></div>
-                                        </div>
+                            <div>
+                                <div style={{ fontSize: 10, fontWeight: 800, color: '#94A3B8', letterSpacing: '0.08em', marginBottom: 10, textTransform: 'uppercase' }}>Job Type</div>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                    {TYPES.map(t => (
+                                        <button key={t} onClick={() => updateParam('type', type === t ? '' : t)}
+                                            style={{
+                                                padding: '5px 11px', borderRadius: 9999, fontSize: 11, fontWeight: 700, cursor: 'pointer',
+                                                border: `1.5px solid ${type === t ? '#4F46E5' : '#E2E8F0'}`,
+                                                background: type === t ? '#EEF2FF' : '#F8FAFC',
+                                                color: type === t ? '#4F46E5' : '#475569',
+                                                transition: 'all 150ms ease',
+                                            }}>
+                                            {t}
+                                        </button>
                                     ))}
                                 </div>
-                            ) : jobs.length === 0 ? (
-                                <div className="text-center py-20">
-                                    <p className="text-[#515B6F] text-lg font-medium">No jobs found</p>
-                                    <p className="text-[#9199A3] text-sm mt-2">Try adjusting your search filters</p>
-                                    <button
-                                        onClick={() => { setKeyword(''); setCategory('All'); setLocation('All Locations'); }}
-                                        className="mt-4 text-[#4640DE] font-semibold text-sm hover:underline"
-                                    >
-                                        Clear all filters
-                                    </button>
-                                </div>
-                            ) : (
-                                <>
-                                    <p className="text-[#7C8493] text-sm mb-4">Showing <strong className="text-[#25324B]">{jobs.length}</strong> results</p>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        {jobs.map(job => (
-                                            <JobCard key={job.id} job={job} />
-                                        ))}
-                                    </div>
-                                </>
-                            )}
+                            </div>
+
+                            <div>
+                                <div style={{ fontSize: 10, fontWeight: 800, color: '#94A3B8', letterSpacing: '0.08em', marginBottom: 10, textTransform: 'uppercase' }}>Location</div>
+                                <select value={location} onChange={e => updateParam('location', e.target.value)}
+                                    style={{ width: '100%', border: '1.5px solid #E2E8F0', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: '#0F172A', outline: 'none', background: '#F8FAFC', fontFamily: 'inherit', cursor: 'pointer', boxSizing: 'border-box' }}>
+                                    <option value="">All Locations</option>
+                                    {LOCATIONS.map(l => <option key={l}>{l}</option>)}
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
-            </main>
-            <Footer />
-        </>
+
+                {/* Error state */}
+                {error && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#FEF2F2', border: '1px solid #FECACA', color: '#DC2626', borderRadius: 12, padding: '14px 16px', marginBottom: 20, fontSize: 14 }} role="alert">
+                        <AlertCircle size={18} />
+                        <span>{error}</span>
+                    </div>
+                )}
+
+                {/* Results grid */}
+                {loading ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 14 }}>
+                        {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
+                    </div>
+                ) : jobs.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '80px 0' }}>
+                        <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                            <Briefcase size={32} color="#CBD5E1" />
+                        </div>
+                        <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>No jobs found</h3>
+                        <p style={{ fontSize: 14, color: '#94A3B8', marginBottom: 24, maxWidth: 320, margin: '0 auto 24px' }}>
+                            Try different keywords, remove filters, or browse all categories.
+                        </p>
+                        <button onClick={clearAll}
+                            style={{ background: 'linear-gradient(135deg, #4F46E5, #6366F1)', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
+                            Clear All Filters
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 14, marginBottom: 32 }}>
+                            {jobs.map(job => (
+                                <FeaturedJobCard key={job.id} job={job} />
+                            ))}
+                        </div>
+
+                        {meta.last_page > 1 && (
+                            <nav aria-label="Pagination" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+                                <button onClick={() => updateParam('page', String(page - 1))} disabled={page === 1}
+                                    style={{ padding: '9px 16px', border: '1.5px solid #E2E8F0', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#475569', background: '#fff', cursor: page === 1 ? 'not-allowed' : 'pointer', opacity: page === 1 ? 0.4 : 1, transition: 'all 150ms' }}>
+                                    ← Prev
+                                </button>
+                                {Array.from({ length: meta.last_page }, (_, i) => i + 1).map(p => (
+                                    <button key={p} onClick={() => updateParam('page', String(p))}
+                                        aria-current={p === page ? 'page' : undefined}
+                                        style={{
+                                            width: 38, height: 38, borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                                            border: 'none', transition: 'all 150ms ease',
+                                            background: p === page ? 'linear-gradient(135deg, #4F46E5, #6366F1)' : '#fff',
+                                            color: p === page ? '#fff' : '#475569',
+                                            boxShadow: p !== page ? 'inset 0 0 0 1.5px #E2E8F0' : '0 2px 8px rgba(79,70,229,0.3)',
+                                        }}>
+                                        {p}
+                                    </button>
+                                ))}
+                                <button onClick={() => updateParam('page', String(page + 1))} disabled={page === meta.last_page}
+                                    style={{ padding: '9px 16px', border: '1.5px solid #E2E8F0', borderRadius: 8, fontSize: 13, fontWeight: 600, color: '#475569', background: '#fff', cursor: page === meta.last_page ? 'not-allowed' : 'pointer', opacity: page === meta.last_page ? 0.4 : 1, transition: 'all 150ms' }}>
+                                    Next →
+                                </button>
+                            </nav>
+                        )}
+                    </>
+                )}
+            </div>
+
+            <style>{`@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}`}</style>
+        </div>
     );
 }

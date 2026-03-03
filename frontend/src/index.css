@@ -1,3 +1,6 @@
+/* Fonts must be @import'd FIRST before any other rules (PostCSS requirement) */
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Red+Hat+Display:wght@500;600;700;800;900&display=swap');
+
 @import "tailwindcss";
 
 @theme {
@@ -18,8 +21,6 @@
   --font-family-sans: 'Epilogue', 'Inter', sans-serif;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Red+Hat+Display:wght@500;600;700;800;900&display=swap');
-
 * {
   box-sizing: border-box;
 }
@@ -33,4 +34,76 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* ─── Global Responsive Utilities ────────────────────────────────────────── */
+
+/* Admin: 4-col stat grid → 2-col tablet → 1-col mobile */
+@media (max-width: 900px) {
+  .qh-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .qh-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .qh-form-grid [style*="span 2"] {
+    grid-column: span 1 !important;
+  }
+}
+
+@media (max-width: 540px) {
+  .qh-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* JobDetail: 2-col layout → single col on tablet */
+@media (max-width: 860px) {
+  .qh-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .qh-detail-sidebar {
+    position: static !important;
+  }
+}
+
+/* JobListings / Companies: filter grid 3-col → 1-col on mobile */
+@media (max-width: 640px) {
+  .qh-filter-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .qh-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Responsive padding on main containers */
+@media (max-width: 640px) {
+  .qh-page-pad {
+    padding: 16px !important;
+  }
+
+  .qh-card-pad {
+    padding: 20px 16px !important;
+  }
+
+  .qh-header-pad {
+    padding: 20px 16px !important;
+  }
+}
+
+/* Auth pages card */
+@media (max-width: 480px) {
+  .qh-auth-card {
+    padding: 28px 20px !important;
+    border-radius: 0 !important;
+  }
+
+  .qh-auth-wrap {
+    padding: 0 !important;
+  }
 }
