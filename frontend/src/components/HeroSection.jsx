@@ -29,7 +29,7 @@ export default function HeroSection() {
     const popularTags = ['UI Designer', 'UX Researcher', 'Android', 'Admin'];
 
     return (
-        <section style={{ background: '#F8F8FD', position: 'relative', overflow: 'hidden', height: 680 }}>
+        <section className="qh-hero-section" style={{ background: '#F8F8FD', position: 'relative', overflow: 'hidden', height: 680 }}>
 
             {/* Background pattern */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
@@ -40,7 +40,7 @@ export default function HeroSection() {
                 />
             </div>
 
-            {/* Main content — 1440px / 124px, full section height, bottom-aligned */}
+            {/* Main content */}
             <div
                 className="qh-hero-inner"
                 style={{
@@ -49,8 +49,8 @@ export default function HeroSection() {
                     padding: '0 124px',
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: 'flex-end',   /* both columns sit at the bottom */
-                    height: '100%',           /* fill the 794px section */
+                    alignItems: 'flex-end',
+                    height: '100%',
                     position: 'relative',
                     zIndex: 10,
                 }}
@@ -73,75 +73,81 @@ export default function HeroSection() {
                         <span style={{ color: '#26A4FF' }}>5000+ Jobs</span>
                     </h1>
 
-                    {/* Underline squiggle from assets */}
+                    {/* Underline squiggle stretched to match heading width */}
                     <div style={{ marginBottom: 24, marginTop: -8 }}>
-                        <img src={underlineLine} alt="" style={{ width: 260, objectFit: 'contain' }} />
+                        <img src={underlineLine} alt="" style={{ width: '100%', maxWidth: 480, objectFit: 'fill', display: 'block' }} />
                     </div>
 
                     <p style={{
                         color: '#515B6F', fontSize: 16, lineHeight: 1.7,
-                        marginBottom: 40, maxWidth: 400,
+                        marginBottom: 24, maxWidth: 400,
                         fontFamily: "'Epilogue', sans-serif",
                     }}>
                         Great platform for the job seeker that searching for new career heights and passionate about startups.
                     </p>
 
-                    {/* ─── Search Bar — matches reference image ─── */}
+                    {/* ─── Search Bar ─── */}
                     <form
                         onSubmit={handleSearch}
+                        className="qh-search-bar"
                         style={{
                             background: '#fff',
-                            borderRadius: 0,
                             display: 'flex',
-                            alignItems: 'center',
-                            overflow: 'visible',
-                            boxShadow: '0 2px 12px rgba(37,50,75,0.08)',
+                            alignItems: 'stretch',
                             marginBottom: 20,
-                            border: 'none',
-                            outline: 'none',
+                            border: '1px solid #D6DDEB',
+                            borderRadius: 0,
+                            overflow: 'hidden',
+                            boxShadow: '0 4px 16px rgba(37,50,75,0.06)',
                         }}
                     >
                         {/* Keyword input */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 16px', flex: 1, minWidth: 0, borderRight: '1px solid #E8ECF3' }}>
-
-                            <Search size={18} color="#9199A3" style={{ flexShrink: 0 }} />
-                            <input
-                                type="text"
-                                placeholder="Job title or keyword"
-                                value={keyword}
-                                onChange={e => setKeyword(e.target.value)}
-                                style={{
-                                    border: 'none', outline: 'none', background: 'transparent',
-                                    color: '#515B6F', fontSize: 14, width: '100%',
-                                    padding: '17px 0',
-                                    fontFamily: "'Epilogue', sans-serif",
-                                }}
-                            />
+                        <div className="qh-search-keyword" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 20px', flex: 1, minWidth: 0 }}>
+                            <Search size={20} color="#9199A3" style={{ flexShrink: 0 }} />
+                            <div style={{ flex: 1, borderBottom: '1.5px solid #D6DDEB', paddingTop: 8, paddingBottom: 2 }}>
+                                <input
+                                    type="text"
+                                    placeholder="Job title or keyword"
+                                    value={keyword}
+                                    onChange={e => setKeyword(e.target.value)}
+                                    style={{
+                                        border: 'none', outline: 'none', background: 'transparent',
+                                        color: '#25324B', fontSize: 14, width: '100%',
+                                        padding: '8px 0',
+                                        fontFamily: "'Epilogue', sans-serif",
+                                    }}
+                                />
+                            </div>
                         </div>
 
+                        {/* Divider */}
+                        <div className="qh-search-divider" style={{ width: 1, background: '#E8ECF3', alignSelf: 'stretch' }} />
+
                         {/* Location dropdown */}
-                        <div style={{ position: 'relative', flexShrink: 0 }}>
-                            <button
-                                type="button"
-                                onClick={() => setLocOpen(!locOpen)}
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: 8,
-                                    padding: '17px 16px',
-                                    background: 'transparent', border: 'none', cursor: 'pointer',
-                                    color: '#515B6F', fontSize: 14, whiteSpace: 'nowrap',
-                                    fontFamily: "'Epilogue', sans-serif",
-                                }}
-                            >
+                        <div className="qh-search-location" style={{ position: 'relative', flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 20px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1.5px solid #D6DDEB', paddingTop: 8, paddingBottom: 2 }}>
                                 <MapPin size={18} color="#9199A3" />
-                                <span>{location}</span>
-                                <ChevronDown size={15} color="#9199A3" style={{ transition: 'transform 150ms', transform: locOpen ? 'rotate(180deg)' : 'rotate(0)' }} />
-                            </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setLocOpen(!locOpen)}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', gap: 8,
+                                        background: 'transparent', border: 'none', cursor: 'pointer',
+                                        color: '#25324B', fontSize: 14, whiteSpace: 'nowrap',
+                                        fontFamily: "'Epilogue', sans-serif",
+                                        padding: '8px 0',
+                                    }}
+                                >
+                                    <span>{location}</span>
+                                    <ChevronDown size={15} color="#9199A3" style={{ transition: 'transform 150ms', transform: locOpen ? 'rotate(180deg)' : 'rotate(0)' }} />
+                                </button>
+                            </div>
                             {locOpen && (
                                 <div style={{
                                     position: 'absolute', top: 'calc(100% + 4px)', left: 0,
                                     background: '#fff', border: '1px solid #D6DDEB',
                                     borderRadius: 0, boxShadow: '0 8px 24px rgba(37,50,75,0.12)',
-                                    zIndex: 50, minWidth: 180, padding: '4px 0',
+                                    zIndex: 50, minWidth: 200, padding: '4px 0',
                                 }}>
                                     {locations.map(loc => (
                                         <button
@@ -168,15 +174,18 @@ export default function HeroSection() {
                         {/* Search button */}
                         <button
                             type="submit"
+                            className="qh-search-btn"
                             style={{
                                 background: '#4640DE', color: '#fff',
                                 border: 'none', cursor: 'pointer',
-                                padding: '17px 24px',
+                                padding: '20px 32px',
                                 fontSize: 15, fontWeight: 700, whiteSpace: 'nowrap',
                                 fontFamily: "'Epilogue', sans-serif",
                                 borderRadius: 0,
                                 transition: 'background 150ms',
                                 flexShrink: 0,
+                                alignSelf: 'stretch',
+                                display: 'flex', alignItems: 'center',
                             }}
                             onMouseEnter={e => e.currentTarget.style.background = '#3730c0'}
                             onMouseLeave={e => e.currentTarget.style.background = '#4640DE'}
@@ -209,20 +218,20 @@ export default function HeroSection() {
                     </p>
                 </div>
 
-                {/* ── Right: Hero person image — bottom-aligned, pushed to the right ── */}
+                {/* ── Right: Hero person image ── */}
                 <div style={{
                     flex: 1,
                     display: 'flex',
                     alignItems: 'flex-end',
-                    justifyContent: 'flex-end',  /* ← pushes image to the far right */
+                    justifyContent: 'flex-end',
                     paddingRight: 0,
-                    marginRight: -40,             /* slight bleed so image anchors to the right edge */
+                    marginRight: -40,
                 }}>
                     <img
                         src={heroPerson}
                         alt="Professional pointing to QuickHire"
                         style={{
-                            height: 'clamp(480px, 55vw, 680px)',  /* larger to fill the 794px section */
+                            height: 'clamp(480px, 55vw, 680px)',
                             width: 'auto',
                             objectFit: 'contain',
                             objectPosition: 'bottom right',
@@ -247,6 +256,39 @@ export default function HeroSection() {
                     }
                     .qh-hero-inner > div:last-child img {
                         height: 320px !important;
+                    }
+                }
+                @media (max-width: 640px) {
+                    .qh-hero-section {
+                        height: auto !important;
+                    }
+                    .qh-hero-inner {
+                        padding: 40px 20px 40px !important;
+                    }
+                    .qh-hero-inner > div:last-child {
+                        display: none !important;
+                    }
+                    .qh-search-bar {
+                        flex-direction: column !important;
+                        overflow: visible !important;
+                    }
+                    .qh-search-keyword {
+                        border-right: none !important;
+                        border-bottom: 1px solid #E8ECF3 !important;
+                        padding: 4px 16px !important;
+                    }
+                    .qh-search-location {
+                        border-bottom: 1px solid #E8ECF3 !important;
+                        width: 100% !important;
+                        padding: 4px 16px !important;
+                    }
+                    .qh-search-divider {
+                        display: none !important;
+                    }
+                    .qh-search-btn {
+                        width: 100% !important;
+                        justify-content: center !important;
+                        padding: 16px !important;
                     }
                 }
             `}</style>

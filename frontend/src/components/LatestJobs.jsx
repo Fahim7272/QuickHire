@@ -95,11 +95,12 @@ export default function LatestJobs() {
                 </div>
 
                 {/* 2-column grid — no stroke, white bg, subtle shadow on hover */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="qh-latest-jobs-grid grid grid-cols-1 md:grid-cols-2 gap-4">
                     {jobs.map(job => (
                         <button
                             key={job.id}
                             onClick={() => navigate(`/jobs/${job.id}`)}
+                            className="qh-latest-card"
                             style={{
                                 width: '100%',
                                 textAlign: 'left',
@@ -120,6 +121,7 @@ export default function LatestJobs() {
                             <img
                                 src={job.company_logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company[0])}&background=4640DE&color=fff&size=56&bold=true`}
                                 alt={job.company}
+                                className="qh-latest-card-logo"
                                 style={{ width: 56, height: 56, borderRadius: 0, objectFit: 'contain', flexShrink: 0 }}
                                 onError={e => {
                                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company[0])}&background=4640DE&color=fff&size=56&bold=true`;

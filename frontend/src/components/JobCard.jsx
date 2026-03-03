@@ -70,8 +70,7 @@ export default function JobCard({ job }) {
             {/* Title + Company — Visual Hierarchy */}
             <div>
                 <h3
-                    className="font-bold text-[#25324B] text-base mb-1 group-hover:text-[#4640DE] transition-colors line-clamp-1"
-                    style={{ fontFamily: 'Epilogue, sans-serif' }}
+                    className="qh-card-title font-semibold text-[#25324B] text-base mb-1 group-hover:text-[#4640DE] transition-colors line-clamp-1"
                 >
                     {job.title}
                 </h3>

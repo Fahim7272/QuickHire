@@ -153,6 +153,7 @@ html {
   }
 }
 
+
 /* Auth pages card */
 @media (max-width: 480px) {
   .qh-auth-card {
@@ -162,5 +163,161 @@ html {
 
   .qh-auth-wrap {
     padding: 0 !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — matches uploaded design screenshots
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+
+  /* ── Hero: auto height, stacked layout ── */
+  .qh-hero-section {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* ── Hero: search bar stacks vertically on mobile ── */
+  .qh-search-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    overflow: visible !important;
+  }
+
+  .qh-search-keyword {
+    border-right: none !important;
+    border-bottom: 1px solid #E8ECF3 !important;
+  }
+
+  .qh-search-location {
+    border-bottom: 1px solid #E8ECF3 !important;
+    width: 100% !important;
+    padding: 0 20px !important;
+  }
+
+  .qh-search-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 16px !important;
+  }
+
+  .qh-search-divider {
+    display: none !important;
+  }
+
+  /* ── Category: single-column list (not 2-col grid) ── */
+  .qh-category-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  .qh-category-card {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 16px !important;
+    padding: 16px 20px !important;
+    border: none !important;
+    border-bottom: 1px solid #D6DDEB !important;
+    border-radius: 0 !important;
+  }
+
+  .qh-category-card .qh-cat-icon {
+    margin-bottom: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .qh-category-card .qh-cat-text {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .qh-category-card .qh-cat-arrow {
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ── Latest Jobs: single column ── */
+  .qh-latest-jobs-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Latest Jobs card: stacked (logo top, text below) ── */
+  .qh-latest-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .qh-latest-card-logo {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  /* ── Featured Jobs: horizontal scroll on mobile ── */
+  .qh-featured-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    gap: 16px !important;
+    padding-bottom: 8px !important;
+    scroll-snap-type: x mandatory !important;
+  }
+
+  .qh-featured-grid>* {
+    min-width: 280px !important;
+    scroll-snap-align: start !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ── CTA Banner: stacked on mobile ── */
+  .qh-cta-inner {
+    min-height: auto !important;
+  }
+
+  .qh-cta-text {
+    width: 100% !important;
+    padding: 40px 24px 32px !important;
+  }
+
+  .qh-cta-dashboard {
+    position: static !important;
+    width: 100% !important;
+    padding: 0 16px 0 !important;
+  }
+
+  .qh-cta-dashboard img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* ── Footer: 2-col links, stacked newsletter ── */
+  .qh-footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  .qh-footer-links {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px !important;
+  }
+
+  .qh-footer-bottom {
+    flex-direction: column-reverse !important;
+    gap: 20px !important;
+    text-align: center !important;
+  }
+
+  .qh-footer-newsletter form {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .qh-footer-newsletter button {
+    width: 100% !important;
   }
 }

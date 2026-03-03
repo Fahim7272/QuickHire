@@ -14,7 +14,9 @@ export default function Footer() {
     return (
         <footer className="bg-[#202430] text-white">
             <div className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-16">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+                {/* Mobile: brand full width, then 2-col links row, then newsletter */}
+                <div className="qh-footer-grid grid grid-cols-1 md:grid-cols-4 gap-10">
+
                     {/* Brand column */}
                     <div className="md:col-span-1">
                         <div className="flex items-center gap-2 mb-4">
@@ -30,36 +32,39 @@ export default function Footer() {
                         </p>
                     </div>
 
-                    {/* About links */}
-                    <div>
-                        <h4 className="font-semibold text-white text-base mb-5">About</h4>
-                        <ul className="flex flex-col gap-3">
-                            {['Companies', 'Pricing', 'Terms', 'Advice', 'Privacy Policy'].map(item => (
-                                <li key={item}>
-                                    <Link to="#" className="text-[#9E9E9E] text-sm hover:text-white transition-colors no-underline">
-                                        {item}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                    {/* About + Resources — on mobile these sit side by side via qh-footer-links wrapper */}
+                    <div className="qh-footer-links md:contents">
+                        {/* About */}
+                        <div>
+                            <h4 className="font-semibold text-white text-base mb-5">About</h4>
+                            <ul className="flex flex-col gap-3">
+                                {['Companies', 'Pricing', 'Terms', 'Advice', 'Privacy Policy'].map(item => (
+                                    <li key={item}>
+                                        <Link to="#" className="text-[#9E9E9E] text-sm hover:text-white transition-colors no-underline">
+                                            {item}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Resources */}
+                        <div>
+                            <h4 className="font-semibold text-white text-base mb-5">Resources</h4>
+                            <ul className="flex flex-col gap-3">
+                                {['Help Docs', 'Guide', 'Updates', 'Contact Us'].map(item => (
+                                    <li key={item}>
+                                        <Link to="#" className="text-[#9E9E9E] text-sm hover:text-white transition-colors no-underline">
+                                            {item}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
 
-                    {/* Resources links */}
-                    <div>
-                        <h4 className="font-semibold text-white text-base mb-5">Resources</h4>
-                        <ul className="flex flex-col gap-3">
-                            {['Help Docs', 'Guide', 'Updates', 'Contact Us'].map(item => (
-                                <li key={item}>
-                                    <Link to="#" className="text-[#9E9E9E] text-sm hover:text-white transition-colors no-underline">
-                                        {item}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Newsletter — full-width row below, pushed to right edge */}
-                    <div>
+                    {/* Newsletter */}
+                    <div className="qh-footer-newsletter">
                         <h4 className="font-semibold text-white text-base mb-3">Get job notifications</h4>
                         <p className="text-[#9E9E9E] text-sm mb-5 leading-relaxed">
                             The latest job news, articles, sent to your inbox weekly.
@@ -108,16 +113,16 @@ export default function Footer() {
                 </div>
             </div>
 
-            {/* Bottom bar — copyright left, social icons flush to right margin edge */}
+            {/* Bottom bar */}
             <div className="border-t border-[#363A49]">
                 <div
-                    className="max-w-[1440px] mx-auto px-6 lg:px-[124px] py-5"
+                    className="qh-footer-bottom max-w-[1440px] mx-auto px-6 lg:px-[124px] py-5"
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
                 >
                     <p className="text-[#9E9E9E] text-sm">
                         2021 @ QuickHire. All rights reserved.
                     </p>
-                    {/* Social icons at the right margin edge — no extra gap after last icon */}
+                    {/* Social icons */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                         {[Facebook, Instagram, Globe, Linkedin, Twitter].map((Icon, i) => (
                             <a
