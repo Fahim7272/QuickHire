@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, MapPin, Briefcase, Users, ChevronRight, Building2 } from 'lucide-react';
 import { mockJobs } from '../services/mockData';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 // ── Build unique companies from mock jobs ──────────────────────────────────
 const INDUSTRY_MAP = {
@@ -54,53 +56,66 @@ function CompanyCard({ company }) {
 
     return (
         <div
-            style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 14, padding: 22, display: 'flex', flexDirection: 'column', gap: 14, transition: 'all 200ms ease', cursor: 'default' }}
-            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(79,70,229,0.1)'; e.currentTarget.style.borderColor = '#C7D2FE'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            style={{
+                background: '#fff',
+                border: '1.5px solid #D6DDEB',
+                borderRadius: 16,
+                padding: 24,
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',         /* ← ensures all cards stretch to same row height */
+                boxSizing: 'border-box',
+                transition: 'all 200ms ease',
+                cursor: 'default',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 8px 24px rgba(70,64,222,0.12)'; e.currentTarget.style.borderColor = '#B0A8FF'; e.currentTarget.style.transform = 'translateY(-3px)'; }}
+            onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#D6DDEB'; e.currentTarget.style.transform = 'translateY(0)'; }}
         >
-            {/* Top row */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-                {/* Logo */}
-                <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', border: '1.5px solid #F1F5F9', flexShrink: 0, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {company.logo ? (
-                        <img src={company.logo} alt={company.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            onError={e => { e.target.parentNode.innerHTML = `<span style="font-size:14px;font-weight:800;color:#4F46E5">${initials}</span>`; }} />
-                    ) : (
-                        <span style={{ fontSize: 14, fontWeight: 800, color: '#4F46E5' }}>{initials}</span>
-                    )}
+            {/* Main content — grows to fill space */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
+                    {/* Logo */}
+                    <div style={{ width: 52, height: 52, borderRadius: 12, overflow: 'hidden', border: '1.5px solid #F1F5F9', flexShrink: 0, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {company.logo ? (
+                            <img src={company.logo} alt={company.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                onError={e => { e.target.parentNode.innerHTML = `<span style="font-size:14px;font-weight:800;color:#4F46E5">${initials}</span>`; }} />
+                        ) : (
+                            <span style={{ fontSize: 14, fontWeight: 800, color: '#4F46E5' }}>{initials}</span>
+                        )}
+                    </div>
+                    <span style={{ background: catStyle.bg, color: catStyle.text, fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 9999, whiteSpace: 'nowrap' }}>
+                        {company.category}
+                    </span>
                 </div>
-                <span style={{ background: catStyle.bg, color: catStyle.text, fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 9999, whiteSpace: 'nowrap' }}>
-                    {company.category}
-                </span>
-            </div>
 
-            {/* Name + description */}
-            <div>
-                <h3 style={{ fontSize: 15, fontWeight: 800, color: '#0F172A', marginBottom: 5, lineHeight: 1.2 }}>{company.name}</h3>
-                <p style={{ fontSize: 12, color: '#64748B', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                    {company.description}
-                </p>
-            </div>
+                {/* Name + description */}
+                <div>
+                    <h3 style={{ fontSize: 15, fontWeight: 800, color: '#0F172A', marginBottom: 5, lineHeight: 1.2 }}>{company.name}</h3>
+                    <p style={{ fontSize: 12, color: '#64748B', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {company.description}
+                    </p>
+                </div>
 
-            {/* Meta */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, fontSize: 12, color: '#94A3B8' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} />{company.location}</span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Users size={11} />{company.size} employees</span>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Est. {company.founded}</span>
-            </div>
+                {/* Meta */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, fontSize: 12, color: '#94A3B8' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} />{company.location}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Users size={11} />{company.size} employees</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>Est. {company.founded}</span>
+                </div>
 
-            {/* Footer */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 12, borderTop: '1px solid #F1F5F9' }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#16A34A', background: '#DCFCE7', padding: '3px 10px', borderRadius: 9999 }}>
-                    {company.openings} open role{company.openings !== 1 ? 's' : ''}
-                </span>
-                <Link to={`/jobs?category=${encodeURIComponent(company.category)}`}
-                    style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 700, color: '#4F46E5', textDecoration: 'none', transition: 'gap 150ms' }}
-                    onMouseEnter={e => e.currentTarget.style.gap = '6px'}
-                    onMouseLeave={e => e.currentTarget.style.gap = '4px'}>
-                    View jobs <ChevronRight size={13} />
-                </Link>
-            </div>
+                {/* Footer */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 12, borderTop: '1px solid #F1F5F9' }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#16A34A', background: '#DCFCE7', padding: '3px 10px', borderRadius: 9999 }}>
+                        {company.openings} open role{company.openings !== 1 ? 's' : ''}
+                    </span>
+                    <Link to={`/jobs?category=${encodeURIComponent(company.category)}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 700, color: '#4640DE', textDecoration: 'none', transition: 'gap 150ms' }}
+                        onMouseEnter={e => e.currentTarget.style.gap = '6px'}
+                        onMouseLeave={e => e.currentTarget.style.gap = '4px'}>
+                        View jobs <ChevronRight size={13} />
+                    </Link>
+                </div>{/* end footer row */}
+            </div>{/* end inner content col */}
         </div>
     );
 }
@@ -118,91 +133,113 @@ export default function BrowseCompanies() {
     useEffect(() => { document.title = 'Browse Companies | QuickHire'; }, []);
 
     return (
-        <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
+        <>
+            <Navbar />
+            <div style={{ minHeight: '100vh', background: '#F1F2F4' }}>
 
-            {/* Page header */}
-            <div style={{ background: '#fff', borderBottom: '1px solid #F1F5F9', padding: '28px 0' }}>
-                <div style={{ maxWidth: 1152, margin: '0 auto', padding: '0 24px' }}>
-                    <nav aria-label="Breadcrumb" style={{ marginBottom: 10 }}>
-                        <ol style={{ display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: 0, fontSize: 12, color: '#94A3B8' }}>
-                            <li><Link to="/" style={{ color: '#94A3B8', textDecoration: 'none' }}>Home</Link></li>
-                            <li aria-hidden style={{ fontSize: 11 }}>›</li>
-                            <li style={{ color: '#4F46E5', fontWeight: 600 }}>Browse Companies</li>
-                        </ol>
-                    </nav>
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                {/* Page header */}
+                <div style={{ background: '#fff', borderBottom: '1px solid #D6DDEB', padding: '28px 0' }}>
+                    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 124px' }} className="qh-auth-header-inner">
+                        <nav aria-label="Breadcrumb" style={{ marginBottom: 10 }}>
+                            <ol style={{ display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: 0, fontSize: 12, color: '#9199A3' }}>
+                                <li><Link to="/" style={{ color: '#9199A3', textDecoration: 'none' }}>Home</Link></li>
+                                <li aria-hidden style={{ fontSize: 11 }}>›</li>
+                                <li style={{ color: '#4640DE', fontWeight: 600 }}>Browse Companies</li>
+                            </ol>
+                        </nav>
+                        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
+                            <div>
+                                <h1 style={{ fontSize: 28, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 4, fontFamily: "'Epilogue', sans-serif" }}>
+                                    Browse <span style={{ color: '#26A4FF' }}>Companies</span>
+                                </h1>
+                                <p style={{ fontSize: 14, color: '#515B6F' }}>
+                                    {filtered.length} compan{filtered.length !== 1 ? 'ies' : 'y'} found
+                                    {activeCategory && <span style={{ color: '#4640DE', fontWeight: 600 }}> in {activeCategory}</span>}
+                                </p>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#7C8493' }}>
+                                <Building2 size={15} />{ALL_COMPANIES.length} companies · {mockJobs.length} open roles
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ maxWidth: 1440, margin: '0 auto', padding: '32px 124px' }} className="qh-auth-header-inner">
+
+                    {/* Search + category filter */}
+                    <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 12, padding: '16px 20px', marginBottom: 24 }}>
+                        <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+                            <div style={{ flex: 1, minWidth: 200, display: 'flex', alignItems: 'center', gap: 10, border: '1px solid #D6DDEB', borderRadius: 8, padding: '0 14px', background: '#F8FAFC', transition: 'all 150ms' }}
+                                onFocusCapture={e => { e.currentTarget.style.borderColor = '#4640DE'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(70,64,222,0.1)'; e.currentTarget.style.background = '#fff'; }}
+                                onBlurCapture={e => { e.currentTarget.style.borderColor = '#D6DDEB'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#F8FAFC'; }}>
+                                <Search size={15} color="#9199A3" style={{ flexShrink: 0 }} />
+                                <input type="search" placeholder="Search companies by name, location, or industry…" value={keyword} onChange={e => setKeyword(e.target.value)}
+                                    style={{ flex: 1, border: 'none', outline: 'none', fontSize: 14, color: '#25324B', background: 'transparent', padding: '12px 0', fontFamily: 'inherit' }}
+                                    aria-label="Search companies" />
+                                {keyword && <button onClick={() => setKeyword('')} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#9199A3', padding: 2 }} aria-label="Clear search">✕</button>}
+                            </div>
+                        </div>
+
+                        {/* Category pills */}
                         <div>
-                            <h1 style={{ fontSize: 26, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: 4 }}>Browse Companies</h1>
-                            <p style={{ fontSize: 13, color: '#94A3B8' }}>
-                                {filtered.length} compan{filtered.length !== 1 ? 'ies' : 'y'} found
-                                {activeCategory && <span style={{ color: '#4F46E5', fontWeight: 600 }}> in {activeCategory}</span>}
-                            </p>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#94A3B8' }}>
-                            <Building2 size={15} />{ALL_COMPANIES.length} companies · {mockJobs.length} open roles
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px' }}>
-
-                {/* Search + category filter */}
-                <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 14, padding: '16px 20px', marginBottom: 20, boxShadow: '0 2px 8px rgba(15,23,42,0.04)' }}>
-                    <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
-                        {/* Search */}
-                        <div style={{ flex: 1, minWidth: 200, display: 'flex', alignItems: 'center', gap: 10, border: '1.5px solid #E2E8F0', borderRadius: 10, padding: '0 14px', background: '#F8FAFC', transition: 'all 150ms' }}
-                            onFocusCapture={e => { e.currentTarget.style.borderColor = '#4F46E5'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(79,70,229,0.1)'; e.currentTarget.style.background = '#fff'; }}
-                            onBlurCapture={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.background = '#F8FAFC'; }}>
-                            <Search size={15} color="#94A3B8" style={{ flexShrink: 0 }} />
-                            <input type="search" placeholder="Search companies by name, location, or industry…" value={keyword} onChange={e => setKeyword(e.target.value)}
-                                style={{ flex: 1, border: 'none', outline: 'none', fontSize: 14, color: '#0F172A', background: 'transparent', padding: '13px 0', fontFamily: 'inherit' }}
-                                aria-label="Search companies" />
-                            {keyword && <button onClick={() => setKeyword('')} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#94A3B8', padding: 2 }} aria-label="Clear search">✕</button>}
+                            <div style={{ fontSize: 11, fontWeight: 700, color: '#9199A3', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Filter by Industry</div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                <button onClick={() => setActiveCategory('')}
+                                    style={{ padding: '6px 14px', borderRadius: 9999, fontSize: 12, fontWeight: 700, cursor: 'pointer', border: `1.5px solid ${!activeCategory ? '#4640DE' : '#D6DDEB'}`, background: !activeCategory ? '#EEF2FF' : '#fff', color: !activeCategory ? '#4640DE' : '#515B6F', transition: 'all 150ms' }}>
+                                    All
+                                </button>
+                                {ALL_CATEGORIES.map(cat => {
+                                    const cs = CAT_COLORS[cat] || { bg: '#F1F5F9', text: '#475569' };
+                                    const active = activeCategory === cat;
+                                    return (
+                                        <button key={cat} onClick={() => setActiveCategory(active ? '' : cat)}
+                                            style={{ padding: '6px 14px', borderRadius: 9999, fontSize: 12, fontWeight: 700, cursor: 'pointer', border: `1.5px solid ${active ? cs.text : '#D6DDEB'}`, background: active ? cs.bg : '#fff', color: active ? cs.text : '#515B6F', transition: 'all 150ms' }}>
+                                            {cat}
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
 
-                    {/* Category pills */}
-                    <div>
-                        <div style={{ fontSize: 10, fontWeight: 800, color: '#94A3B8', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Industry</div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                            <button onClick={() => setActiveCategory('')}
-                                style={{ padding: '5px 12px', borderRadius: 9999, fontSize: 11, fontWeight: 700, cursor: 'pointer', border: `1.5px solid ${!activeCategory ? '#4F46E5' : '#E2E8F0'}`, background: !activeCategory ? '#EEF2FF' : '#F8FAFC', color: !activeCategory ? '#4F46E5' : '#475569', transition: 'all 150ms' }}>
-                                All
+                    {/* Results */}
+                    {filtered.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '80px 0' }}>
+                            <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#F1F2F4', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                                <Building2 size={32} color="#9199A3" />
+                            </div>
+                            <h3 style={{ fontSize: 18, fontWeight: 700, color: '#25324B', marginBottom: 8 }}>No companies found</h3>
+                            <p style={{ fontSize: 14, color: '#7C8493', marginBottom: 20 }}>Try different keywords or remove the industry filter.</p>
+                            <button onClick={() => { setKeyword(''); setActiveCategory(''); }}
+                                style={{ background: '#4640DE', color: '#fff', border: 'none', borderRadius: 8, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
+                                Clear Filters
                             </button>
-                            {ALL_CATEGORIES.map(cat => {
-                                const cs = CAT_COLORS[cat] || { bg: '#F1F5F9', text: '#475569' };
-                                const active = activeCategory === cat;
-                                return (
-                                    <button key={cat} onClick={() => setActiveCategory(active ? '' : cat)}
-                                        style={{ padding: '5px 12px', borderRadius: 9999, fontSize: 11, fontWeight: 700, cursor: 'pointer', border: `1.5px solid ${active ? cs.text : '#E2E8F0'}`, background: active ? cs.bg : '#F8FAFC', color: active ? cs.text : '#475569', transition: 'all 150ms' }}>
-                                        {cat}
-                                    </button>
-                                );
-                            })}
                         </div>
-                    </div>
+                    ) : (
+                        <div className="qh-companies-grid">
+                            {filtered.map(company => <CompanyCard key={company.name} company={company} />)}
+                        </div>
+                    )}
                 </div>
-
-                {/* Results */}
-                {filtered.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '80px 0' }}>
-                        <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#F1F5F9', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
-                            <Building2 size={32} color="#CBD5E1" />
-                        </div>
-                        <h3 style={{ fontSize: 18, fontWeight: 700, color: '#0F172A', marginBottom: 8 }}>No companies found</h3>
-                        <p style={{ fontSize: 14, color: '#94A3B8', marginBottom: 20 }}>Try different keywords or remove the industry filter.</p>
-                        <button onClick={() => { setKeyword(''); setActiveCategory(''); }}
-                            style={{ background: 'linear-gradient(135deg,#4F46E5,#6366F1)', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
-                            Clear Filters
-                        </button>
-                    </div>
-                ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-                        {filtered.map(company => <CompanyCard key={company.name} company={company} />)}
-                    </div>
-                )}
             </div>
-        </div>
+            <Footer />
+            <style>{`
+                .qh-companies-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 24px;
+                    align-items: stretch;
+                }
+                @media (max-width: 1024px) {
+                    .qh-companies-grid { grid-template-columns: repeat(2, 1fr); }
+                }
+                @media (max-width: 640px) {
+                    .qh-companies-grid { grid-template-columns: 1fr; }
+                }
+                @media (max-width: 768px) {
+                    .qh-auth-header-inner { padding: 0 24px !important; }
+                }
+            `}</style>
+        </>
     );
 }

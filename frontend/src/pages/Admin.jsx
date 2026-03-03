@@ -3,6 +3,8 @@ import { Plus, Trash2, CheckCircle2, AlertCircle, Lock, Eye, EyeOff, Building2, 
 import { getJobs, createJob, deleteJob } from '../services/api';
 import { mockJobs } from '../services/mockData';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const ADMIN_PIN = '1234';
 const CATEGORIES = ['Design', 'Sales', 'Marketing', 'Finance', 'Technology', 'Engineering', 'Business', 'Human Resource'];
@@ -143,7 +145,7 @@ function AddJobForm({ onJobAdded }) {
                 </div>
 
                 <form onSubmit={handleSubmit} noValidate>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 16px', marginBottom: 12 }}>
+                    <div className="qh-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px 16px', marginBottom: 12 }}>
                         {[
                             { label: 'Job Title', name: 'title', ph: 'e.g. Senior Product Designer' },
                             { label: 'Company', name: 'company', ph: 'e.g. Google' },
@@ -336,42 +338,46 @@ export default function Admin() {
     ];
 
     return (
-        <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
-            <div style={{ background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
-                <div style={{ maxWidth: 1152, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-                    <div>
-                        <h1 style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.01em' }}>Admin Dashboard</h1>
-                        <p style={{ fontSize: 12, color: '#94A3B8' }}>Manage job listings</p>
-                    </div>
-                    <button onClick={() => { sessionStorage.removeItem('admin_ok'); setUnlocked(false); }}
-                        style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1.5px solid #E2E8F0', borderRadius: 9, fontSize: 13, fontWeight: 600, color: '#64748B', background: '#F8FAFC', cursor: 'pointer', transition: 'all 150ms' }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#CBD5E1'; e.currentTarget.style.color = '#0F172A'; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.color = '#64748B'; }}>
-                        <Lock size={13} /> Lock
-                    </button>
-                </div>
-            </div>
-
-            <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-                    {stats.map(({ label, value, Icon, gradient, color }) => (
-                        <div key={label} style={{ background: gradient, borderRadius: 14, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 11, background: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                <Icon size={18} color={color} />
-                            </div>
-                            <div>
-                                <div style={{ fontSize: 26, fontWeight: 800, color, lineHeight: 1, letterSpacing: '-0.03em' }}>{value}</div>
-                                <div style={{ fontSize: 11, fontWeight: 600, color, opacity: 0.7, marginTop: 2 }}>{label}</div>
-                            </div>
+        <>
+            <Navbar />
+            <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
+                <div style={{ background: '#fff', borderBottom: '1px solid #F1F5F9' }}>
+                    <div style={{ maxWidth: 1152, margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+                        <div>
+                            <h1 style={{ fontSize: 18, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.01em' }}>Admin Dashboard</h1>
+                            <p style={{ fontSize: 12, color: '#94A3B8' }}>Manage job listings</p>
                         </div>
-                    ))}
+                        <button onClick={() => { sessionStorage.removeItem('admin_ok'); setUnlocked(false); }}
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1.5px solid #E2E8F0', borderRadius: 9, fontSize: 13, fontWeight: 600, color: '#64748B', background: '#F8FAFC', cursor: 'pointer', transition: 'all 150ms' }}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor = '#CBD5E1'; e.currentTarget.style.color = '#0F172A'; }}
+                            onMouseLeave={e => { e.currentTarget.style.borderColor = '#E2E8F0'; e.currentTarget.style.color = '#64748B'; }}>
+                            <Lock size={13} /> Lock
+                        </button>
+                    </div>
                 </div>
 
-                <AddJobForm onJobAdded={loadJobs} />
-                <JobsTable jobs={jobs} loading={loading} onDelete={id => setJobs(p => p.filter(j => j.id !== id))} />
-            </div>
+                <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 20 }} className="qh-page-pad">
+                    <div className="qh-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+                        {stats.map(({ label, value, Icon, gradient, color }) => (
+                            <div key={label} style={{ background: gradient, borderRadius: 14, padding: '18px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 11, background: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                    <Icon size={18} color={color} />
+                                </div>
+                                <div>
+                                    <div style={{ fontSize: 26, fontWeight: 800, color, lineHeight: 1, letterSpacing: '-0.03em' }}>{value}</div>
+                                    <div style={{ fontSize: 11, fontWeight: 600, color, opacity: 0.7, marginTop: 2 }}>{label}</div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
-            <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
-        </div>
+                    <AddJobForm onJobAdded={loadJobs} />
+                    <JobsTable jobs={jobs} loading={loading} onDelete={id => setJobs(p => p.filter(j => j.id !== id))} />
+                </div>
+
+                <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
+            </div>
+            <Footer />
+        </>
     );
 }

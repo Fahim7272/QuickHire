@@ -8,6 +8,8 @@ import {
 import { getJob, getJobs, submitApplication } from '../services/api';
 import { mockJobs } from '../services/mockData';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const CATEGORY_COLORS = {
     Marketing: { bg: '#FFF4E5', text: '#C47B0E' }, Design: { bg: '#EBF5FF', text: '#1E6DB7' },
@@ -231,115 +233,119 @@ export default function JobDetail() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
-            <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px 24px 64px' }}>
+        <>
+            <Navbar />
+            <div style={{ minHeight: '100vh', background: '#F8FAFC' }}>
+                <div style={{ maxWidth: 1152, margin: '0 auto', padding: '24px 24px 64px' }}>
 
-                <nav aria-label="Breadcrumb" style={{ marginBottom: 20 }}>
-                    <ol style={{ display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: 0, fontSize: 12, color: '#94A3B8', alignItems: 'center' }}>
-                        <li><Link to="/" style={{ color: '#94A3B8', textDecoration: 'none' }}>Home</Link></li>
-                        <li><ChevronRight size={11} /></li>
-                        <li><Link to="/jobs" style={{ color: '#94A3B8', textDecoration: 'none' }}>Find Jobs</Link></li>
-                        <li><ChevronRight size={11} /></li>
-                        <li style={{ color: '#4F46E5', fontWeight: 600, maxWidth: 240, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{job.title}</li>
-                    </ol>
-                </nav>
+                    <nav aria-label="Breadcrumb" style={{ marginBottom: 20 }}>
+                        <ol style={{ display: 'flex', gap: 6, listStyle: 'none', padding: 0, margin: 0, fontSize: 12, color: '#94A3B8', alignItems: 'center' }}>
+                            <li><Link to="/" style={{ color: '#94A3B8', textDecoration: 'none' }}>Home</Link></li>
+                            <li><ChevronRight size={11} /></li>
+                            <li><Link to="/jobs" style={{ color: '#94A3B8', textDecoration: 'none' }}>Find Jobs</Link></li>
+                            <li><ChevronRight size={11} /></li>
+                            <li style={{ color: '#4F46E5', fontWeight: 600, maxWidth: 240, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{job.title}</li>
+                        </ol>
+                    </nav>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 20, alignItems: 'flex-start' }}>
+                    <div className="qh-detail-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 20, alignItems: 'flex-start' }}>
 
-                    {/* Main card */}
-                    <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 16, padding: '32px 36px' }}>
-                        <div style={{ display: 'flex', gap: 16, marginBottom: 24, alignItems: 'flex-start' }}>
-                            <div style={{ width: 60, height: 60, borderRadius: 14, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: '#4F46E5', flexShrink: 0, border: '1.5px solid #C7D2FE' }}>
-                                {job.company?.slice(0, 2).toUpperCase()}
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#DCFCE7', borderRadius: 9999, padding: '3px 10px', marginBottom: 8 }}>
-                                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16A34A' }} />
-                                    <span style={{ fontSize: 11, fontWeight: 700, color: '#15803D' }}>Accepting Applications</span>
+                        {/* Main card */}
+                        <div className="qh-card-pad" style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 16, padding: '32px 36px' }}>
+                            <div style={{ display: 'flex', gap: 16, marginBottom: 24, alignItems: 'flex-start' }}>
+                                <div style={{ width: 60, height: 60, borderRadius: 14, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 800, color: '#4F46E5', flexShrink: 0, border: '1.5px solid #C7D2FE' }}>
+                                    {job.company?.slice(0, 2).toUpperCase()}
                                 </div>
-                                <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0F172A', marginBottom: 8, letterSpacing: '-0.02em', lineHeight: 1.2 }}>{job.title}</h1>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: 13, color: '#64748B' }}>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Building2 size={13} /><strong>{job.company}</strong></span>
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={13} />{job.location}</span>
-                                    {job.salary_range && <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><DollarSign size={13} />{job.salary_range}</span>}
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={13} />{job.type || 'Full Time'}</span>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: '#DCFCE7', borderRadius: 9999, padding: '3px 10px', marginBottom: 8 }}>
+                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16A34A' }} />
+                                        <span style={{ fontSize: 11, fontWeight: 700, color: '#15803D' }}>Accepting Applications</span>
+                                    </div>
+                                    <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0F172A', marginBottom: 8, letterSpacing: '-0.02em', lineHeight: 1.2 }}>{job.title}</h1>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, fontSize: 13, color: '#64748B' }}>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Building2 size={13} /><strong>{job.company}</strong></span>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={13} />{job.location}</span>
+                                        {job.salary_range && <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><DollarSign size={13} />{job.salary_range}</span>}
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={13} />{job.type || 'Full Time'}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingBottom: 24, borderBottom: '1.5px solid #F1F5F9', marginBottom: 28 }}>
-                            <span style={{ background: catStyle.bg, color: catStyle.text, fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 9999 }}>{job.category}</span>
-                            <span style={{ border: '1.5px solid #CBD5E1', color: '#475569', fontSize: 12, fontWeight: 600, padding: '5px 14px', borderRadius: 6 }}>{job.type || 'Full Time'}</span>
-                        </div>
-
-                        <h2 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 16, letterSpacing: '-0.01em' }}>About this role</h2>
-                        <div>{formatDesc(job.description)}</div>
-                    </div>
-
-                    {/* Sidebar */}
-                    <div style={{ position: 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                        <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 16, padding: '24px 20px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
-                                <Users size={13} color="#94A3B8" />
-                                <span style={{ fontSize: 12, color: '#94A3B8' }}><strong style={{ color: '#0F172A' }}>{applicants}</strong> people applied</span>
-                            </div>
-                            <h2 style={{ fontSize: 17, fontWeight: 800, color: '#0F172A', marginBottom: 4 }}>Ready to apply?</h2>
-                            <p style={{ fontSize: 12, color: '#94A3B8', marginBottom: 16, lineHeight: 1.5 }}>2-minute application. No account needed.</p>
-
-                            <div style={{ background: '#F8FAFC', borderRadius: 10, padding: 14, marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                {[
-                                    { icon: <Building2 size={13} color="#4F46E5" />, v: job.company },
-                                    { icon: <MapPin size={13} color="#4F46E5" />, v: job.location },
-                                    { icon: <Clock size={13} color="#4F46E5" />, v: job.type || 'Full Time' },
-                                    job.salary_range ? { icon: <DollarSign size={13} color="#4F46E5" />, v: job.salary_range } : null,
-                                ].filter(Boolean).map((r, i) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#475569' }}>{r.icon}{r.v}</div>
-                                ))}
+                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingBottom: 24, borderBottom: '1.5px solid #F1F5F9', marginBottom: 28 }}>
+                                <span style={{ background: catStyle.bg, color: catStyle.text, fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 9999 }}>{job.category}</span>
+                                <span style={{ border: '1.5px solid #CBD5E1', color: '#475569', fontSize: 12, fontWeight: 600, padding: '5px 14px', borderRadius: 6 }}>{job.type || 'Full Time'}</span>
                             </div>
 
-                            <button onClick={() => setShowForm(true)}
-                                style={{ width: '100%', padding: 15, cursor: 'pointer', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 800, color: '#fff', background: 'linear-gradient(135deg, #4F46E5, #6366F1)', boxShadow: '0 6px 20px rgba(79,70,229,0.38)', transition: 'all 200ms ease', letterSpacing: '0.01em' }}
-                                onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 10px 30px rgba(79,70,229,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                                onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(79,70,229,0.38)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                                Apply Now →
-                            </button>
-
-                            <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                                <button onClick={() => setSaved(!saved)} aria-pressed={saved}
-                                    style={{ flex: 1, padding: 10, borderRadius: 10, border: `1.5px solid ${saved ? '#4F46E5' : '#E2E8F0'}`, background: saved ? '#EEF2FF' : '#F8FAFC', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, color: saved ? '#4F46E5' : '#64748B', transition: 'all 150ms' }}>
-                                    {saved ? <BookmarkCheck size={13} /> : <Bookmark size={13} />} {saved ? 'Saved' : 'Save'}
-                                </button>
-                                <button style={{ flex: 1, padding: 10, borderRadius: 10, border: '1.5px solid #E2E8F0', background: '#F8FAFC', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, color: '#64748B', transition: 'all 150ms' }}>
-                                    <Share2 size={13} /> Share
-                                </button>
-                            </div>
+                            <h2 style={{ fontSize: 16, fontWeight: 800, color: '#0F172A', marginBottom: 16, letterSpacing: '-0.01em' }}>About this role</h2>
+                            <div>{formatDesc(job.description)}</div>
                         </div>
 
-                        {relatedJobs.length > 0 && (
-                            <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 16, padding: 20 }}>
-                                <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0F172A', marginBottom: 12 }}>Similar Roles</h3>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                                    {relatedJobs.map(rj => (
-                                        <Link key={rj.id} to={`/jobs/${rj.id}`}
-                                            style={{ display: 'flex', gap: 10, textDecoration: 'none', padding: 10, borderRadius: 10, border: '1.5px solid #F1F5F9', transition: 'all 150ms ease' }}
-                                            onMouseEnter={e => { e.currentTarget.style.borderColor = '#C7D2FE'; e.currentTarget.style.background = '#F8FAFC'; }}
-                                            onMouseLeave={e => { e.currentTarget.style.borderColor = '#F1F5F9'; e.currentTarget.style.background = 'transparent'; }}>
-                                            <div style={{ width: 36, height: 36, borderRadius: 9, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: '#4F46E5', flexShrink: 0 }}>
-                                                {rj.company?.slice(0, 2).toUpperCase()}
-                                            </div>
-                                            <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ fontSize: 13, fontWeight: 700, color: '#0F172A', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rj.title}</div>
-                                                <div style={{ fontSize: 11, color: '#94A3B8' }}>{rj.company}</div>
-                                            </div>
-                                        </Link>
+                        {/* Sidebar */}
+                        <div style={{ position: 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                            <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 16, padding: '24px 20px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+                                    <Users size={13} color="#94A3B8" />
+                                    <span style={{ fontSize: 12, color: '#94A3B8' }}><strong style={{ color: '#0F172A' }}>{applicants}</strong> people applied</span>
+                                </div>
+                                <h2 style={{ fontSize: 17, fontWeight: 800, color: '#0F172A', marginBottom: 4 }}>Ready to apply?</h2>
+                                <p style={{ fontSize: 12, color: '#94A3B8', marginBottom: 16, lineHeight: 1.5 }}>2-minute application. No account needed.</p>
+
+                                <div style={{ background: '#F8FAFC', borderRadius: 10, padding: 14, marginBottom: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                    {[
+                                        { icon: <Building2 size={13} color="#4F46E5" />, v: job.company },
+                                        { icon: <MapPin size={13} color="#4F46E5" />, v: job.location },
+                                        { icon: <Clock size={13} color="#4F46E5" />, v: job.type || 'Full Time' },
+                                        job.salary_range ? { icon: <DollarSign size={13} color="#4F46E5" />, v: job.salary_range } : null,
+                                    ].filter(Boolean).map((r, i) => (
+                                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#475569' }}>{r.icon}{r.v}</div>
                                     ))}
                                 </div>
+
+                                <button onClick={() => setShowForm(true)}
+                                    style={{ width: '100%', padding: 15, cursor: 'pointer', border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 800, color: '#fff', background: 'linear-gradient(135deg, #4F46E5, #6366F1)', boxShadow: '0 6px 20px rgba(79,70,229,0.38)', transition: 'all 200ms ease', letterSpacing: '0.01em' }}
+                                    onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 10px 30px rgba(79,70,229,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(79,70,229,0.38)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                                    Apply Now →
+                                </button>
+
+                                <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                                    <button onClick={() => setSaved(!saved)} aria-pressed={saved}
+                                        style={{ flex: 1, padding: 10, borderRadius: 10, border: `1.5px solid ${saved ? '#4F46E5' : '#E2E8F0'}`, background: saved ? '#EEF2FF' : '#F8FAFC', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, color: saved ? '#4F46E5' : '#64748B', transition: 'all 150ms' }}>
+                                        {saved ? <BookmarkCheck size={13} /> : <Bookmark size={13} />} {saved ? 'Saved' : 'Save'}
+                                    </button>
+                                    <button style={{ flex: 1, padding: 10, borderRadius: 10, border: '1.5px solid #E2E8F0', background: '#F8FAFC', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, color: '#64748B', transition: 'all 150ms' }}>
+                                        <Share2 size={13} /> Share
+                                    </button>
+                                </div>
                             </div>
-                        )}
+
+                            {relatedJobs.length > 0 && (
+                                <div style={{ background: '#fff', border: '1.5px solid #E2E8F0', borderRadius: 16, padding: 20 }}>
+                                    <h3 style={{ fontSize: 14, fontWeight: 700, color: '#0F172A', marginBottom: 12 }}>Similar Roles</h3>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                        {relatedJobs.map(rj => (
+                                            <Link key={rj.id} to={`/jobs/${rj.id}`}
+                                                style={{ display: 'flex', gap: 10, textDecoration: 'none', padding: 10, borderRadius: 10, border: '1.5px solid #F1F5F9', transition: 'all 150ms ease' }}
+                                                onMouseEnter={e => { e.currentTarget.style.borderColor = '#C7D2FE'; e.currentTarget.style.background = '#F8FAFC'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.borderColor = '#F1F5F9'; e.currentTarget.style.background = 'transparent'; }}>
+                                                <div style={{ width: 36, height: 36, borderRadius: 9, background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: '#4F46E5', flexShrink: 0 }}>
+                                                    {rj.company?.slice(0, 2).toUpperCase()}
+                                                </div>
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ fontSize: 13, fontWeight: 700, color: '#0F172A', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rj.title}</div>
+                                                    <div style={{ fontSize: 11, color: '#94A3B8' }}>{rj.company}</div>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
+                {showForm && <ApplyModal job={job} onClose={() => setShowForm(false)} />}
             </div>
-            {showForm && <ApplyModal job={job} onClose={() => setShowForm(false)} />}
-        </div>
+            <Footer />
+        </>
     );
 }

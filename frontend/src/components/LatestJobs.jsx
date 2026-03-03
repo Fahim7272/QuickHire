@@ -4,12 +4,24 @@ import { ArrowRight } from 'lucide-react';
 import { getJobs } from '../services/api';
 import { mockJobs } from '../services/mockData';
 
+// Badge style: white bg, colored border + colored text, pill shape — matching Figma reference
 const tagColors = {
-    'Full-Time': 'border border-[#4640DE]/30 text-[#4640DE] bg-transparent',
-    'Full Time': 'border border-[#4640DE]/30 text-[#4640DE] bg-transparent',
-    Marketing: 'bg-[#FFF0EA] text-[#FF6636]',
-    Design: 'bg-[#F8F0FF] text-[#9B51E0]',
+    'Full-Time': 'border border-[#56CDAD] text-[#56CDAD] bg-white',
+    'Full Time': 'border border-[#56CDAD] text-[#56CDAD] bg-white',
+    'Part Time': 'border border-[#FFB836] text-[#FFB836] bg-white',
+    'Remote': 'border border-[#26A4FF] text-[#26A4FF] bg-white',
+    'Internship': 'border border-[#FF6550] text-[#FF6550] bg-white',
+    'Contract': 'border border-[#7C8493] text-[#7C8493] bg-white',
+    Marketing: 'border border-[#FFB836] text-[#FFB836] bg-white',
+    Design: 'border border-[#4640DE] text-[#4640DE] bg-white',
+    Business: 'border border-[#4640DE] text-[#4640DE] bg-white',
+    Technology: 'border border-[#FF6550] text-[#FF6550] bg-white',
+    Engineering: 'border border-[#56CDAD] text-[#56CDAD] bg-white',
+    Finance: 'border border-[#9B51E0] text-[#9B51E0] bg-white',
+    Sales: 'border border-[#FF6550] text-[#FF6550] bg-white',
+    'Human Resource': 'border border-[#26A4FF] text-[#26A4FF] bg-white',
 };
+
 
 const latestMock = mockJobs.slice(8, 16);
 
