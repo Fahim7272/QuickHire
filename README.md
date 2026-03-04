@@ -12,7 +12,7 @@
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com/)
 [![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net/)
 
-[Live Demo](#) · [Report Bug](https://github.com/Fahim7272/QuickHire/issues) · [Request Feature](https://github.com/Fahim7272/QuickHire/issues)
+[Live Demo](https://quickhirefapatwary.vercel.app/)
 
 </div>
 
