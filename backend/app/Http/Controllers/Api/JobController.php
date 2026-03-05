@@ -3,47 +3,81 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\JobListing;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class JobController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-    //
+        $query = JobListing::query();
+
+        if ($request->filled('search')) {
+            $s = $request->search;
+            $query->where(function ($q) use ($s) {
+                $q->where('title', 'like', "%{$s}%")
+                    ->orWhere('company', 'like', "%{$s}%")
+                    ->orWhere('description', 'like', "%{$s}%");
+            });
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location', 'like', "%{$request->location}%");
+        }
+
+        $perPage = $request->get('per_page', 20);
+        $jobs = $query->latest()->paginate($perPage);
+
+        return response()->json($jobs);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(string $id): JsonResponse
     {
-    //
+        $job = JobListing::find($id);
+
+        if (!$job) {
+            return response()->json(['message' => 'Job not found'], 404);
+        }
+
+        return response()->json($job);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function store(Request $request): JsonResponse
     {
-    //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'company' => 'required|string|max:255',
+            'company_logo' => 'nullable|string|max:500',
+            'location' => 'required|string|max:255',
+            'category' => 'required|string|max:100',
+            'type' => 'required|string|max:100',
+            'description' => 'required|string',
+        ]);
+
+        $job = JobListing::create($validated);
+
+        return response()->json($job, 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(string $id): JsonResponse
     {
-    //
-    }
+        $job = JobListing::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-    //
+        if (!$job) {
+            return response()->json(['message' => 'Job not found'], 404);
+        }
+
+        $job->delete();
+
+        return response()->json(['message' => 'Job deleted successfully']);
     }
 }
