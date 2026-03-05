@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, LogIn, Shield, CheckCircle2 } from 'lucide-react';
 import quickhireLogo from '../assets/quickhire-logo.png';
 import { loginAsAdmin, loginAsUser, isAdminLoggedIn, isUserLoggedIn } from '../services/auth';
+import { loginUser } from '../services/api';
 
 
 const ADMIN_DOMAIN = '@admin.com';
@@ -47,21 +48,31 @@ export default function Login() {
         const pwErr = validate('password', form.password);
         if (emailErr || pwErr) { setErrors({ email: emailErr, password: pwErr }); return; }
         setSubmitting(true);
-        await new Promise(r => setTimeout(r, 800));
-        if (isAdminEmail) {
-            if (form.password !== 'admin1234') {
-                setApiError('Incorrect admin password. Please check the credentials above.');
-                setSubmitting(false);
-                return;
+        setApiError('');
+        try {
+            if (isAdminEmail) {
+                // Admin: hardcoded password check (no backend admin auth)
+                if (form.password !== 'admin1234') {
+                    setApiError('Incorrect admin password.');
+                    setSubmitting(false);
+                    return;
+                }
+                loginAsAdmin();
+                navigate('/admin');
+            } else {
+                // Regular user: validate against DB via API
+                const res = await loginUser(form.email, form.password);
+                loginAsUser(res.data.token, res.data.user);
+                navigate('/dashboard');
             }
-            loginAsAdmin();
-            navigate('/admin');
-        } else {
-            const name = form.email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-            loginAsUser(name, form.email);
-            navigate('/dashboard');
+        } catch (err) {
+            const msg = err?.response?.data?.message
+                || Object.values(err?.response?.data?.errors || {})[0]?.[0]
+                || 'Login failed. Please check your credentials.';
+            setApiError(msg);
+        } finally {
+            setSubmitting(false);
         }
-        setSubmitting(false);
     };
 
     const inp = (name) => ({

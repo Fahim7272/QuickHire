@@ -7,9 +7,9 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { getUser, logout, isUserLoggedIn } from '../services/auth';
+import { getUser, isUserLoggedIn } from '../services/auth';
 import { mockJobs, COMPANY_LOGO_MAP } from '../services/mockData';
-import { getJobs } from '../services/api';
+import { getJobs, getMyApplications } from '../services/api';
 
 const CATEGORY_COLORS = {
     Marketing: { bg: '#FFF4E5', text: '#C47B0E' },
@@ -31,11 +31,13 @@ const STATUS_STYLES = {
 };
 
 function getProfile() {
-    try { return JSON.parse(localStorage.getItem('qh_user_profile') || '{}'); } catch { return {}; }
+    // Profile data is now in the user session (synced from API)
+    const u = getUser();
+    return { photo: u?.profile_photo_url, skills: u?.skills, title: u?.title, bio: u?.bio };
 }
 
 function calcCompletion(profile, user) {
-    const checks = [!!user?.name, !!user?.email, !!profile.photo, !!profile.resume?.name, !!(profile.skills?.length), !!profile.title, !!profile.bio];
+    const checks = [!!user?.name, !!user?.email, !!profile.photo, !!(profile.resume?.name), !!(profile.skills?.length), !!profile.title, !!profile.bio];
     return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }
 
@@ -103,15 +105,20 @@ export default function Dashboard() {
     const navigate = useNavigate();
     const user = getUser();
     const [recommended, setRecommended] = useState(mockJobs.slice(0, 4));
-    const [appliedJobs, setAppliedJobs] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('qh_applied_jobs') || '[]'); } catch { return []; }
-    });
+    const [appliedJobs, setAppliedJobs] = useState([]);
     const [profile, setProfile] = useState(getProfile);
-    const completion = calcCompletion(profile, user);
+    // resume still in localStorage
+    const localResume = (() => { try { return JSON.parse(localStorage.getItem('qh_resume') || 'null'); } catch { return null; } })();
+    const completion = calcCompletion({ ...profile, resume: localResume }, user);
 
-    const refreshApplied = useCallback(() => {
-        try { setAppliedJobs(JSON.parse(localStorage.getItem('qh_applied_jobs') || '[]')); } catch { }
+    const refreshData = useCallback(() => {
         setProfile(getProfile());
+        // Try API first, fall back to localStorage
+        getMyApplications()
+            .then(res => { if (Array.isArray(res.data)) setAppliedJobs(res.data); })
+            .catch(() => {
+                try { setAppliedJobs(JSON.parse(localStorage.getItem('qh_applied_jobs') || '[]')); } catch { }
+            });
     }, []);
 
     useEffect(() => {
@@ -121,14 +128,14 @@ export default function Dashboard() {
             const data = res.data?.data || res.data || [];
             if (data.length >= 4) setRecommended(data.slice(0, 4));
         }).catch(() => { });
-        // Refresh when storage or profile changes
-        window.addEventListener('storage', refreshApplied);
-        window.addEventListener('qh-profile-change', refreshApplied);
+        refreshData();
+        window.addEventListener('storage', refreshData);
+        window.addEventListener('qh-profile-change', refreshData);
         return () => {
-            window.removeEventListener('storage', refreshApplied);
-            window.removeEventListener('qh-profile-change', refreshApplied);
+            window.removeEventListener('storage', refreshData);
+            window.removeEventListener('qh-profile-change', refreshData);
         };
-    }, [navigate, refreshApplied]);
+    }, [navigate, refreshData]);
 
     const initials = (user?.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
     const joinDate = user?.at ? new Date(user.at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Recently';
@@ -143,7 +150,7 @@ export default function Dashboard() {
                     <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }} className="qh-dash-inner">
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-                                {/* Avatar: show profile photo if uploaded */}
+                                {/* Avatar: show profile_photo_url from API session */}
                                 {profile.photo
                                     ? <img src={profile.photo} alt="Avatar" style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: '3px solid rgba(255,255,255,0.5)', flexShrink: 0 }} />
                                     : <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '2.5px solid rgba(255,255,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, fontWeight: 800, color: '#fff', flexShrink: 0 }}>{initials}</div>}

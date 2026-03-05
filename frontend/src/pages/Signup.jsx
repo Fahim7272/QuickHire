@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, User, CheckCircle2 } from 'lucide-react';
 import quickhireLogo from '../assets/quickhire-logo.png';
+import { registerUser } from '../services/api';
+import { loginAsUser } from '../services/auth';
 
 function passwordStrength(pw) {
     let score = 0;
@@ -60,9 +62,24 @@ export default function Signup() {
         });
         if (Object.keys(newErrors).length) { setErrors(newErrors); return; }
         setSubmitting(true);
-        await new Promise(r => setTimeout(r, 900));
-        setDone(true);
-        setTimeout(() => navigate('/login', { state: { signedUp: true } }), 1800);
+        try {
+            const res = await registerUser({
+                name: form.name,
+                email: form.email,
+                password: form.password,
+                password_confirmation: form.confirm,
+            });
+            loginAsUser(res.data.token, res.data.user);
+            setDone(true);
+            setTimeout(() => navigate('/dashboard'), 1400);
+        } catch (err) {
+            const msg = err?.response?.data?.message
+                || Object.values(err?.response?.data?.errors || {})[0]?.[0]
+                || 'Registration failed. Please try again.';
+            setErrors(p => ({ ...p, email: msg }));
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const inp = (name, extra = {}) => ({

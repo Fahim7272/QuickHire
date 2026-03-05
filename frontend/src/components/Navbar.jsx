@@ -5,7 +5,10 @@ import quickhireLogo from '../assets/quickhire-logo.png';
 import { isAdminLoggedIn, isUserLoggedIn, getUser, logout } from '../services/auth';
 
 function getProfilePhoto() {
-    try { return JSON.parse(localStorage.getItem('qh_user_profile') || '{}').photo || null; } catch { return null; }
+    try {
+        const session = JSON.parse(localStorage.getItem('qh_user_session') || '{}');
+        return session.profile_photo_url || null;
+    } catch { return null; }
 }
 
 export default function Navbar() {
