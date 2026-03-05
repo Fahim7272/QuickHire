@@ -15,7 +15,7 @@ class Application extends Model
         'cover_note',
     ];
 
-    public function job(): BelongsTo
+    public function jobListing(): BelongsTo
     {
         return $this->belongsTo(JobListing::class);
     }

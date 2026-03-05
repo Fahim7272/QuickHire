@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Building2 } from 'lucide-react';
+import { COMPANY_LOGO_MAP } from '../../services/mockData';
 
 const CATEGORY_COLORS = {
     Marketing: { bg: '#FFF4E5', text: '#C47B0E' },
@@ -25,6 +26,7 @@ export function FeaturedJobCard({ job }) {
     const catStyle = CATEGORY_COLORS[job.category] || { bg: '#F1F5F9', text: '#475569' };
     const typeStyle = TYPE_COLORS[job.type] || TYPE_COLORS['Full Time'];
     const initials = (job.company || '?').slice(0, 2).toUpperCase();
+    const resolvedLogo = COMPANY_LOGO_MAP[job.company] || job.company_logo || null;
 
     return (
         <button
@@ -50,9 +52,9 @@ export function FeaturedJobCard({ job }) {
         >
             {/* Top row: logo + type badge */}
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                {job.company_logo ? (
+                {resolvedLogo ? (
                     <img
-                        src={job.company_logo}
+                        src={resolvedLogo}
                         alt={job.company}
                         style={{ width: 44, height: 44, borderRadius: 11, objectFit: 'cover', border: '1.5px solid #F1F5F9' }}
                         onError={e => {
@@ -63,7 +65,7 @@ export function FeaturedJobCard({ job }) {
                 ) : null}
                 <div style={{
                     width: 44, height: 44, borderRadius: 11,
-                    background: '#EEF2FF', display: job.company_logo ? 'none' : 'flex',
+                    background: '#EEF2FF', display: resolvedLogo ? 'none' : 'flex',
                     alignItems: 'center', justifyContent: 'center',
                     fontSize: 14, fontWeight: 800, color: '#4F46E5',
                 }}>

@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, LogIn, Shield } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, LogIn, Shield, CheckCircle2 } from 'lucide-react';
 import quickhireLogo from '../assets/quickhire-logo.png';
-import { loginAsAdmin, isAdminLoggedIn } from '../services/auth';
+import { loginAsAdmin, loginAsUser, isAdminLoggedIn, isUserLoggedIn } from '../services/auth';
 
 
 const ADMIN_DOMAIN = '@admin.com';
 
 export default function Login() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [form, setForm] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState({});
     const [showPw, setShowPw] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [apiError, setApiError] = useState('');
     const isAdminEmail = form.email.toLowerCase().endsWith(ADMIN_DOMAIN);
+    const justSignedUp = location.state?.signedUp;
 
     useEffect(() => { document.title = 'Login | QuickHire'; }, []);
 
@@ -34,9 +36,9 @@ export default function Login() {
         setApiError('');
     };
 
-    // If already logged in as admin, redirect immediately — no login page again
     useEffect(() => {
         if (isAdminLoggedIn()) navigate('/admin', { replace: true });
+        else if (isUserLoggedIn()) navigate('/dashboard', { replace: true });
     }, []);
 
     const handleSubmit = async e => {
@@ -55,7 +57,9 @@ export default function Login() {
             loginAsAdmin();
             navigate('/admin');
         } else {
-            navigate('/');
+            const name = form.email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            loginAsUser(name, form.email);
+            navigate('/dashboard');
         }
         setSubmitting(false);
     };
@@ -86,6 +90,13 @@ export default function Login() {
             {/* Main — centered within full width */}
             <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
                 <div className="qh-auth-card-inner" style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 16, padding: '40px 40px', width: '100%', maxWidth: 480, boxShadow: '0 4px 24px rgba(37,50,75,0.06)' }}>
+
+                    {justSignedUp && (
+                        <div style={{ background: '#DCFCE7', border: '1.5px solid #86EFAC', borderRadius: 10, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <CheckCircle2 size={18} color="#16A34A" style={{ flexShrink: 0 }} />
+                            <span style={{ fontSize: 14, color: '#15803D', fontWeight: 600 }}>Account created successfully! Please sign in to continue.</span>
+                        </div>
+                    )}
 
                     <div style={{ marginBottom: 24 }}>
                         <h1 style={{ fontSize: 26, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 8, fontFamily: "'ClashDisplay', 'Epilogue', sans-serif" }}>

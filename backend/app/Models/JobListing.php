@@ -15,6 +15,7 @@ class JobListing extends Model
         'category',
         'type',
         'description',
+        'is_featured',
     ];
 
     public function applications(): HasMany

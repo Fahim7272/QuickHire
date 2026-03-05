@@ -248,3 +248,52 @@ export function timeAgo(dateStr) {
     const months = Math.floor(days / 30);
     return months === 1 ? '1 month ago' : `${months} months ago`;
 }
+
+export const COMPANY_LOGO_MAP = {
+    // ── Original 16 (mockJobs) ──────────────────────
+    'Revolut': companyLogo1,
+    'Dropbox': companyLogo2,
+    'Pitch': companyLogo3,
+    'Blinklist': companyLogo4,
+    'Blinkist': companyLogo4,
+    'ClassPass': companyLogo5,
+    'Canva': companyLogo6,
+    'GoDaddy': companyLogo7,
+    'Twitter': companyLogo8,
+    'Nomad': latestLogo1,
+    'Netlify': latestLogo2,
+    'Maze': latestLogo3,
+    'Terraform': latestLogo4,
+    'Udacity': latestLogo5,
+    'Packer': latestLogo6,
+    'Webflow': latestLogo7,
+    'Figma': latestLogo8,
+
+    // ── Engineering (seeded) ────────────────────────
+    'Vercel': companyLogo1,
+    'Cloudflare': companyLogo2,
+    'GitHub': companyLogo3,
+
+    // ── Finance (seeded) ────────────────────────────
+    'Stripe': companyLogo4,
+    'Shopify': companyLogo5,
+    'PayPal': companyLogo6,
+    'Coinbase': companyLogo7,
+
+    // ── Sales (seeded) ──────────────────────────────
+    'Salesforce': companyLogo8,
+    'HubSpot': latestLogo1,
+    'Notion': latestLogo2,
+    'Zoom': latestLogo3,
+
+    // ── Business (seeded) ───────────────────────────
+    'Atlassian': latestLogo4,
+    'McKinsey': latestLogo5,
+    'Airbnb': latestLogo6,
+    'Spotify': latestLogo7,
+
+    // ── Human Resource (seeded) ─────────────────────
+    'Linear': latestLogo8,
+    'Intercom': companyLogo1,
+    'Buffer': companyLogo2,
+};

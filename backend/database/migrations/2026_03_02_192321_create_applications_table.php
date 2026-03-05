@@ -13,8 +13,8 @@ return new class extends Migration
             $table->foreignId('job_listing_id')->constrained('job_listings')->onDelete('cascade');
             $table->string('name');
             $table->string('email');
-            $table->string('resume_link');
-            $table->text('cover_note');
+            $table->string('resume_link')->nullable();
+            $table->text('cover_note')->nullable();
             $table->timestamps();
         });
     }

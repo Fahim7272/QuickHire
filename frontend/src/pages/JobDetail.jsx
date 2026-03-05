@@ -6,7 +6,8 @@ import {
     Users, Briefcase, ChevronRight
 } from 'lucide-react';
 import { getJob, getJobs, submitApplication } from '../services/api';
-import { mockJobs } from '../services/mockData';
+import { mockJobs, COMPANY_LOGO_MAP } from '../services/mockData';
+import { getUser } from '../services/auth';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -53,8 +54,14 @@ function Field({ label, name, type = 'text', placeholder, value, onChange, error
 }
 
 function ApplyModal({ job, onClose }) {
+    const user = getUser();
     const [step, setStep] = useState(1);
-    const [form, setForm] = useState({ name: '', email: '', resume_link: '', cover_note: '' });
+    const [form, setForm] = useState({
+        name: user?.name || '',
+        email: user?.email || '',
+        resume_link: '',
+        cover_note: '',
+    });
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -90,14 +97,41 @@ function ApplyModal({ job, onClose }) {
         if (le) { setErrors(p => ({ ...p, resume_link: le })); return; }
         setSubmitting(true); setApiError('');
         try {
-            await submitApplication({ ...form, job_id: job.id });
-            setSubmitted(true);
-            setTimeout(onClose, 2400);
-        } catch {
-            // Demo mode — show success anyway
-            setSubmitted(true);
-            setTimeout(onClose, 2400);
-        } finally { setSubmitting(false); }
+            await submitApplication({ ...form, job_listing_id: job.id });
+        } catch (err) {
+            // If 422 validation or network error, still mark success in demo
+            if (err?.response?.status === 422) {
+                setApiError('Validation error — check your inputs.');
+                setSubmitting(false);
+                return;
+            }
+        }
+        // Save to localStorage for user dashboard "My Applications"
+        try {
+            const stored = JSON.parse(localStorage.getItem('qh_applied_jobs') || '[]');
+            const already = stored.some(a => a.job_id === job.id && a.email === form.email);
+            if (!already) {
+                stored.unshift({
+                    job_id: job.id,
+                    title: job.title,
+                    company: job.company,
+                    company_logo: job.company_logo,
+                    location: job.location,
+                    category: job.category,
+                    type: job.type,
+                    name: form.name,
+                    email: form.email,
+                    cover_note: form.cover_note,
+                    resume_link: form.resume_link,
+                    applied_at: new Date().toISOString(),
+                    status: 'Pending',
+                });
+                localStorage.setItem('qh_applied_jobs', JSON.stringify(stored));
+            }
+        } catch { /* ignore storage errors */ }
+        setSubmitted(true);
+        setSubmitting(false);
+        setTimeout(onClose, 2400);
     };
 
     const progress = submitted ? 100 : step === 1 ? 33 : 66;

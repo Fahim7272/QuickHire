@@ -7,6 +7,8 @@ import Admin from './pages/Admin';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import BrowseCompanies from './pages/BrowseCompanies';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 
 export default function App() {
@@ -21,6 +23,8 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

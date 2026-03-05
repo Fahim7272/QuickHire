@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Trash2, CheckCircle2, AlertCircle, Building2, MapPin, Star, BarChart2, Users, Briefcase } from 'lucide-react';
+import { Plus, Trash2, CheckCircle2, AlertCircle, Building2, MapPin, Star, BarChart2, Users, Briefcase, Mail, FileText, Inbox } from 'lucide-react';
 import { getJobs, createJob, deleteJob } from '../services/api';
+import axios from 'axios';
 import { mockJobs } from '../services/mockData';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Navbar from '../components/Navbar';
@@ -310,11 +311,105 @@ function JobsTable({ jobs, loading, onDelete }) {
     );
 }
 
+function ApplicationsTab() {
+    const [applications, setApplications] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        axios.get('/api/applications')
+            .then(res => {
+                setApplications(res.data || []);
+                setLoading(false);
+            })
+            .catch(() => {
+                setError('Could not load applications. Make sure the backend server is running.');
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) return <LoadingSpinner text="Loading applications…" />;
+
+    if (error) return (
+        <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '20px 24px', color: '#DC2626', fontSize: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <AlertCircle size={16} style={{ flexShrink: 0 }} /> {error}
+        </div>
+    );
+
+    return (
+        <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 0, overflow: 'hidden' }}>
+            <div style={{ padding: '18px 24px', borderBottom: '1px solid #D6DDEB', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div>
+                    <h2 style={{ fontSize: 16, fontWeight: 800, color: '#25324B', fontFamily: "'Epilogue', sans-serif" }}>Job Applications</h2>
+                    <p style={{ fontSize: 12, color: '#515B6F', marginTop: 2 }}>{applications.length} application{applications.length !== 1 ? 's' : ''} received</p>
+                </div>
+            </div>
+
+            {applications.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '56px 24px', color: '#9199A3' }}>
+                    <Inbox size={40} style={{ margin: '0 auto 14px', display: 'block', opacity: 0.4 }} />
+                    <p style={{ fontSize: 15, fontWeight: 600, color: '#515B6F' }}>No applications yet</p>
+                    <p style={{ fontSize: 13, marginTop: 4 }}>Applications submitted by candidates will appear here.</p>
+                </div>
+            ) : (
+                <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                        <thead>
+                            <tr style={{ background: '#F8FAFC' }}>
+                                {['Applicant', 'Email', 'Job Applied For', 'Cover Note', 'Applied On'].map(h => (
+                                    <th key={h} style={{ textAlign: 'left', padding: '11px 20px', fontSize: 11, fontWeight: 700, color: '#7C8493', letterSpacing: '0.06em', textTransform: 'uppercase', borderBottom: '1px solid #E2E8F0', whiteSpace: 'nowrap' }}>{h}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {applications.map((app, i) => (
+                                <tr key={app.id || i}
+                                    style={{ borderBottom: '1px solid #F1F2F4', transition: 'background 150ms' }}
+                                    onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                    <td style={{ padding: '14px 20px', fontWeight: 700, color: '#25324B' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                            <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#EEF2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: '#4640DE', flexShrink: 0 }}>
+                                                {(app.name || '?').slice(0, 2).toUpperCase()}
+                                            </div>
+                                            {app.name}
+                                        </div>
+                                    </td>
+                                    <td style={{ padding: '14px 20px', color: '#515B6F' }}>
+                                        <a href={`mailto:${app.email}`} style={{ color: '#4640DE', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 5 }}>
+                                            <Mail size={12} />{app.email}
+                                        </a>
+                                    </td>
+                                    <td style={{ padding: '14px 20px', color: '#25324B', fontWeight: 600 }}>
+                                        {app.job_listing
+                                            ? <><div style={{ fontWeight: 700 }}>{app.job_listing.title}</div><div style={{ fontSize: 12, color: '#7C8493', marginTop: 2 }}>{app.job_listing.company}</div></>
+                                            : <span style={{ color: '#94A3B8', fontStyle: 'italic' }}>Job #{app.job_listing_id}</span>}
+                                    </td>
+                                    <td style={{ padding: '14px 20px', color: '#7C8493', maxWidth: 200 }}>
+                                        <span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                                            {app.cover_note || <span style={{ fontStyle: 'italic', opacity: 0.5 }}>No cover note</span>}
+                                        </span>
+                                    </td>
+                                    <td style={{ padding: '14px 20px', color: '#7C8493', whiteSpace: 'nowrap' }}>
+                                        {app.created_at ? new Date(app.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
+    );
+}
+
+
 const LS_KEY = 'qh_admin_jobs';
 
 export default function Admin() {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('jobs');
 
     const persistJobs = (list) => {
         localStorage.setItem(LS_KEY, JSON.stringify(list));
@@ -408,8 +503,24 @@ export default function Admin() {
                         ))}
                     </div>
 
-                    <AddJobForm onJobAdded={handleJobAdded} />
-                    <JobsTable jobs={jobs} loading={loading} onDelete={handleDelete} />
+                    {/* Tab Switcher */}
+                    <div style={{ display: 'flex', gap: 0, borderBottom: '2px solid #E2E8F0' }}>
+                        {[{ id: 'jobs', label: 'Job Listings', icon: Briefcase }, { id: 'applications', label: 'Applications', icon: Inbox }].map(tab => (
+                            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                                style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 20px', background: 'none', border: 'none', borderBottom: `2.5px solid ${activeTab === tab.id ? '#4640DE' : 'transparent'}`, marginBottom: -2, color: activeTab === tab.id ? '#4640DE' : '#7C8493', fontWeight: activeTab === tab.id ? 700 : 500, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 150ms' }}>
+                                <tab.icon size={15} />{tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {activeTab === 'jobs' ? (
+                        <>
+                            <AddJobForm onJobAdded={handleJobAdded} />
+                            <JobsTable jobs={jobs} loading={loading} onDelete={handleDelete} />
+                        </>
+                    ) : (
+                        <ApplicationsTab />
+                    )}
                 </div>
 
                 <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}

@@ -34,6 +34,10 @@ class JobController extends Controller
             $query->where('location', 'like', "%{$request->location}%");
         }
 
+        if ($request->boolean('is_featured')) {
+            $query->where('is_featured', true);
+        }
+
         $perPage = $request->get('per_page', 20);
         $jobs = $query->latest()->paginate($perPage);
 

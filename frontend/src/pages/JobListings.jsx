@@ -161,32 +161,35 @@ export default function JobListings() {
                                 )}
                             </div>
 
-                            <button type="submit"
-                                style={{ background: '#4640DE', color: '#fff', border: 'none', borderRadius: 0, padding: '0 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44, transition: 'all 150ms ease' }}
-                                onMouseEnter={e => e.currentTarget.style.background = '#3730c0'}
-                                onMouseLeave={e => e.currentTarget.style.background = '#4640DE'}>
-                                Search
-                            </button>
+                            <div className="qh-jl-search-buttons" style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+                                <button type="submit"
+                                    style={{ background: '#4640DE', color: '#fff', border: 'none', borderRadius: 0, padding: '0 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', minHeight: 44, transition: 'all 150ms ease' }}
+                                    onMouseEnter={e => e.currentTarget.style.background = '#3730c0'}
+                                    onMouseLeave={e => e.currentTarget.style.background = '#4640DE'}>
+                                    Search
+                                </button>
 
-                            <button type="button" onClick={() => setFiltersOpen(!filtersOpen)}
-                                aria-expanded={filtersOpen}
-                                aria-controls="filter-panel"
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: 6, minHeight: 44,
-                                    border: `1.5px solid ${filtersOpen ? '#4640DE' : '#D6DDEB'}`,
-                                    borderRadius: 0, padding: '0 16px', fontSize: 13, fontWeight: 700,
-                                    color: filtersOpen ? '#4640DE' : '#515B6F',
-                                    background: filtersOpen ? '#EEF2FF' : '#F8FAFC',
-                                    cursor: 'pointer', transition: 'all 150ms ease', whiteSpace: 'nowrap',
-                                }}>
-                                <SlidersHorizontal size={15} />
-                                Filters {activeFilters.length > 0 && (
-                                    <span style={{ background: '#4F46E5', color: '#fff', borderRadius: 9999, width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800 }}>
-                                        {activeFilters.length}
-                                    </span>
-                                )}
-                            </button>
+                                <button type="button" onClick={() => setFiltersOpen(!filtersOpen)}
+                                    aria-expanded={filtersOpen}
+                                    aria-controls="filter-panel"
+                                    style={{
+                                        display: 'flex', alignItems: 'center', gap: 6, minHeight: 44,
+                                        border: `1.5px solid ${filtersOpen ? '#4640DE' : '#D6DDEB'}`,
+                                        borderRadius: 0, padding: '0 16px', fontSize: 13, fontWeight: 700,
+                                        color: filtersOpen ? '#4640DE' : '#515B6F',
+                                        background: filtersOpen ? '#EEF2FF' : '#F8FAFC',
+                                        cursor: 'pointer', transition: 'all 150ms ease', whiteSpace: 'nowrap',
+                                    }}>
+                                    <SlidersHorizontal size={15} />
+                                    Filters {activeFilters.length > 0 && (
+                                        <span style={{ background: '#4F46E5', color: '#fff', borderRadius: 9999, width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800 }}>
+                                            {activeFilters.length}
+                                        </span>
+                                    )}
+                                </button>
+                            </div>
                         </form>
+
 
                         {/* Active filter chips */}
                         {activeFilters.length > 0 && (
@@ -328,9 +331,11 @@ export default function JobListings() {
                     @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
                     @media(max-width:640px){
                         .qh-auth-header-inner{padding:0 16px !important;}
-                        .qh-jl-search-form{flex-wrap:wrap !important;}
-                        .qh-jl-search-form > div:first-child{width:100% !important; min-width:0 !important;}
-                        .qh-jl-search-form > button{flex:1 !important; min-height:44px !important;}
+                        .qh-jl-search-form{flex-direction:column !important; gap:10px !important;}
+                        .qh-jl-search-form > div:first-child{width:100% !important; min-width:0 !important; flex:none !important;}
+                        .qh-jl-search-form > button[type="submit"]{min-height:48px !important; border-radius:8px !important; flex:1 !important;}
+                        .qh-jl-search-form > button[type="button"]{min-height:48px !important; border-radius:8px !important; flex:1 !important;}
+                        .qh-jl-search-buttons{display:flex !important; gap:10px !important; width:100% !important;}
                         .qh-jl-jobs-grid{grid-template-columns:1fr !important;}
                         .qh-jl-filter-panel{padding:12px 0 0 !important;}
                         .qh-jl-filter-panel .qh-filter-grid{grid-template-columns:1fr 1fr !important;}

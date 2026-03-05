@@ -62,7 +62,7 @@ export default function Signup() {
         setSubmitting(true);
         await new Promise(r => setTimeout(r, 900));
         setDone(true);
-        setTimeout(() => navigate('/'), 2000);
+        setTimeout(() => navigate('/login', { state: { signedUp: true } }), 1800);
     };
 
     const inp = (name, extra = {}) => ({
@@ -82,7 +82,7 @@ export default function Signup() {
                     <CheckCircle2 size={36} color="#16A34A" />
                 </div>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>Account created! 🎉</h2>
-                <p style={{ fontSize: 14, color: '#94A3B8' }}>Redirecting you to the homepage…</p>
+                <p style={{ fontSize: 14, color: '#94A3B8' }}>Redirecting you to login…</p>
             </div>
         </div>
     );

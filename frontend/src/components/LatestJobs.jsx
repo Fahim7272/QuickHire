@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { getJobs } from '../services/api';
-import { mockJobs } from '../services/mockData';
+import { mockJobs, COMPANY_LOGO_MAP } from '../services/mockData';
 import patternBg from '../assets/Pattern.png';
 import bgLatestJobs from '../assets/BG-Latest jobs open.png';
 
@@ -119,7 +119,7 @@ export default function LatestJobs() {
                             onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
                         >
                             <img
-                                src={job.company_logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company[0])}&background=4640DE&color=fff&size=56&bold=true`}
+                                src={COMPANY_LOGO_MAP[job.company] || job.company_logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company[0])}&background=4640DE&color=fff&size=56&bold=true`}
                                 alt={job.company}
                                 className="qh-latest-card-logo"
                                 style={{ width: 56, height: 56, borderRadius: 0, objectFit: 'contain', flexShrink: 0 }}

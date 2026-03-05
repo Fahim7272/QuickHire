@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import JobCard from './JobCard';
 import { getJobs } from '../services/api';
-import { mockJobs } from '../services/mockData';
+import { mockJobs, COMPANY_LOGO_MAP } from '../services/mockData';
 
+// Fallback: 8 mock jobs that have local logo assets
 const featuredMock = mockJobs.slice(0, 8).map(job => ({
     ...job,
     tags: job.tags || [job.category],
@@ -15,10 +16,18 @@ export default function FeaturedJobs() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        getJobs({})
+        // Fetch only is_featured jobs from the API
+        getJobs({ is_featured: 1, per_page: 8 })
             .then(res => {
-                if (res.data?.data?.length) setJobs(res.data.data.slice(0, 8));
-                else if (res.data?.length) setJobs(res.data.slice(0, 8));
+                const data = res.data?.data || res.data || [];
+                if (Array.isArray(data) && data.length > 0) {
+                    // Inject local logo asset if available
+                    const enriched = data.map(job => ({
+                        ...job,
+                        _resolvedLogo: COMPANY_LOGO_MAP[job.company] || job.company_logo,
+                    }));
+                    setJobs(enriched);
+                }
             })
             .catch(() => setJobs(featuredMock));
     }, []);
@@ -41,9 +50,12 @@ export default function FeaturedJobs() {
 
                 {/* Grid */}
                 <div className="qh-featured-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
                     {jobs.map(job => (
-                        <JobCard key={job.id} job={job} />
+                        <JobCard key={job.id} job={{
+                            ...job,
+                            // Use pre-resolved local asset logo if available
+                            company_logo: job._resolvedLogo || COMPANY_LOGO_MAP[job.company] || job.company_logo,
+                        }} />
                     ))}
                 </div>
             </div>

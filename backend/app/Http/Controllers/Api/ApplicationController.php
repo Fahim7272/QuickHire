@@ -11,7 +11,7 @@ class ApplicationController extends Controller
 {
     public function index(): JsonResponse
     {
-        $applications = Application::with('job')->latest()->get();
+        $applications = Application::with('jobListing')->latest()->get();
         return response()->json($applications);
     }
 
