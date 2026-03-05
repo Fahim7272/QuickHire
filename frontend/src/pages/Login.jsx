@@ -85,7 +85,7 @@ export default function Login() {
 
             {/* Main — centered within full width */}
             <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
-                <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 16, padding: '40px 40px', width: '100%', maxWidth: 480, boxShadow: '0 4px 24px rgba(37,50,75,0.06)' }}>
+                <div className="qh-auth-card-inner" style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 16, padding: '40px 40px', width: '100%', maxWidth: 480, boxShadow: '0 4px 24px rgba(37,50,75,0.06)' }}>
 
                     <div style={{ marginBottom: 24 }}>
                         <h1 style={{ fontSize: 26, fontWeight: 800, color: '#25324B', letterSpacing: '-0.02em', marginBottom: 8, fontFamily: "'ClashDisplay', 'Epilogue', sans-serif" }}>
@@ -192,8 +192,9 @@ export default function Login() {
 
             <style>{`
                 @keyframes spin { to { transform: rotate(360deg) } }
-                @media (max-width: 768px) {
-                    .qh-auth-header-inner { padding: 0 24px !important; }
+                @media (max-width: 640px) {
+                    .qh-auth-header-inner { padding: 0 16px !important; }
+                    .qh-auth-card-inner { padding: 28px 20px !important; }
                 }
             `}</style>
         </div>

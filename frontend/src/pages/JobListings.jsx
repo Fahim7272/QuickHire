@@ -133,7 +133,7 @@ export default function JobListings() {
                     <div style={{ background: '#fff', border: '1px solid #D6DDEB', borderRadius: 0, padding: '16px 20px', marginBottom: 20 }}>
 
 
-                        <form onSubmit={handleSearch} style={{ display: 'flex', gap: 10 }} role="search">
+                        <form onSubmit={handleSearch} className="qh-jl-search-form" style={{ display: 'flex', gap: 10 }} role="search">
                             <div style={{
                                 flex: 1, display: 'flex', alignItems: 'center', gap: 10,
                                 border: '1.5px solid #E2E8F0', borderRadius: 10, padding: '0 14px',
@@ -289,7 +289,7 @@ export default function JobListings() {
                         </div>
                     ) : (
                         <>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 14, marginBottom: 32 }}>
+                            <div className="qh-jl-jobs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: 14, marginBottom: 32 }}>
                                 {jobs.map(job => (
                                     <FeaturedJobCard key={job.id} job={job} />
                                 ))}
@@ -324,7 +324,18 @@ export default function JobListings() {
                     )}
                 </div>
 
-                <style>{`@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}`}</style>
+                <style>{`
+                    @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+                    @media(max-width:640px){
+                        .qh-auth-header-inner{padding:0 16px !important;}
+                        .qh-jl-search-form{flex-wrap:wrap !important;}
+                        .qh-jl-search-form > div:first-child{width:100% !important; min-width:0 !important;}
+                        .qh-jl-search-form > button{flex:1 !important; min-height:44px !important;}
+                        .qh-jl-jobs-grid{grid-template-columns:1fr !important;}
+                        .qh-jl-filter-panel{padding:12px 0 0 !important;}
+                        .qh-jl-filter-panel .qh-filter-grid{grid-template-columns:1fr 1fr !important;}
+                    }
+                `}</style>
             </div>
             <Footer />
         </>

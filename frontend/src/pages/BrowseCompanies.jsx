@@ -200,7 +200,7 @@ export default function BrowseCompanies() {
                         {/* Category pills */}
                         <div>
                             <div style={{ fontSize: 11, fontWeight: 700, color: '#9199A3', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Filter by Industry</div>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                            <div className="qh-filter-pills" style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                                 <button onClick={() => setActiveCategory('')}
                                     style={{ padding: '6px 14px', borderRadius: 9999, fontSize: 12, fontWeight: 700, cursor: 'pointer', border: `1.5px solid ${!activeCategory ? '#4640DE' : '#D6DDEB'}`, background: !activeCategory ? '#EEF2FF' : '#fff', color: !activeCategory ? '#4640DE' : '#515B6F', transition: 'all 150ms' }}>
                                     All
@@ -252,6 +252,8 @@ export default function BrowseCompanies() {
                 }
                 @media (max-width: 640px) {
                     .qh-companies-grid { grid-template-columns: 1fr; }
+                    .qh-auth-header-inner { padding: 0 16px !important; }
+                    .qh-filter-pills { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
                 }
                 @media (max-width: 768px) {
                     .qh-auth-header-inner { padding: 0 24px !important; }

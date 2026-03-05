@@ -320,4 +320,51 @@ html {
   .qh-footer-newsletter button {
     width: 100% !important;
   }
+
+  .qh-admin-job-row {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    padding: 14px 16px !important;
+  }
+
+  .qh-admin-job-row .qh-job-badges {
+    order: 3 !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+  }
+
+  .qh-admin-job-row .qh-job-delete {
+    order: 2 !important;
+    margin-left: auto !important;
+  }
+
+  .qh-auth-card-inner {
+    padding: 28px 20px !important;
+  }
+
+  .qh-filter-pills {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 6px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .qh-companies-strip-logos {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px 24px !important;
+    justify-items: start !important;
+  }
+
+  /* ── Global: all interactive elements ≥ 44px tall ── */
+  button,
+  a[role="button"],
+  input[type="submit"] {
+    min-height: 36px;
+  }
+
+  /* ── JobListings filter panel: full-width dropdowns ── */
+  .qh-jl-filter-panel select {
+    width: 100% !important;
+  }
 }

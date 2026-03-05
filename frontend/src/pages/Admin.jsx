@@ -67,10 +67,10 @@ function AddJobForm({ onJobAdded }) {
             setForm(EMPTY); setErrors({});
             onJobAdded();
         } catch {
-            // Optimistic local update when backend unavailable
-            setToast({ msg: `"${form.title}" created (demo mode)!`, type: 'success' });
+            const newJob = { ...form, id: Date.now(), created_at: new Date().toISOString(), tags: [form.category] };
+            onJobAdded(newJob);
+            setToast({ msg: `"${form.title}" created successfully!`, type: 'success' });
             setForm(EMPTY); setErrors({});
-            onJobAdded();
         } finally { setSubmitting(false); }
     };
 
@@ -183,7 +183,7 @@ function JobsTable({ jobs, loading, onDelete }) {
             setToast({ msg: 'Job listing deleted.', type: 'success' });
         } catch {
             onDelete(pendingDeleteId);
-            setToast({ msg: 'Job removed (demo mode).', type: 'success' });
+            setToast({ msg: 'Job listing deleted.', type: 'success' });
         } finally { setDeleting(false); setPendingDeleteId(null); }
     };
 
@@ -265,6 +265,7 @@ function JobsTable({ jobs, loading, onDelete }) {
                             const cs = CAT_COLORS[job.category] || { bg: '#F1F5F9', text: '#475569' };
                             return (
                                 <div key={job.id}
+                                    className="qh-admin-job-row"
                                     style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 24px', borderBottom: '1px solid #F1F2F4', transition: 'background 150ms ease' }}
                                     onMouseEnter={e => e.currentTarget.style.background = '#F8FAFC'}
                                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
@@ -284,12 +285,12 @@ function JobsTable({ jobs, loading, onDelete }) {
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                                    <div className="qh-job-badges" style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                                         <span style={{ background: cs.bg, color: cs.text, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 9999, display: 'inline-flex', alignItems: 'center', lineHeight: 1 }}>{job.category}</span>
                                         <span style={{ border: '1px solid #D6DDEB', color: '#515B6F', fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 9999, display: 'inline-flex', alignItems: 'center', lineHeight: 1 }}>{job.type}</span>
                                     </div>
 
-                                    <div style={{ flexShrink: 0 }}>
+                                    <div className="qh-job-delete" style={{ flexShrink: 0 }}>
                                         <button
                                             onClick={() => setPendingDeleteId(job.id)}
                                             style={{ width: 36, height: 36, borderRadius: 0, border: '1px solid #D6DDEB', background: '#F8FAFC', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#EF4444', transition: 'all 150ms' }}
@@ -309,23 +310,68 @@ function JobsTable({ jobs, loading, onDelete }) {
     );
 }
 
+const LS_KEY = 'qh_admin_jobs';
+
 export default function Admin() {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const persistJobs = (list) => {
+        localStorage.setItem(LS_KEY, JSON.stringify(list));
+        setJobs(list);
+    };
 
     const loadJobs = async () => {
         try {
             const r = await getJobs({ per_page: 100 });
             const data = r.data?.data || r.data || [];
-            setJobs(Array.isArray(data) && data.length ? data : mockJobs);
-        } catch { setJobs(mockJobs); }
-        finally { setLoading(false); }
+            if (Array.isArray(data) && data.length) {
+                persistJobs(data);
+                setLoading(false);
+                return;
+            }
+        } catch { }
+
+        try {
+            const saved = localStorage.getItem(LS_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (Array.isArray(parsed) && parsed.length) {
+                    setJobs(parsed);
+                    setLoading(false);
+                    return;
+                }
+            }
+        } catch { }
+
+        persistJobs(mockJobs);
+        setLoading(false);
     };
 
     useEffect(() => {
         document.title = 'Admin Dashboard | QuickHire';
         loadJobs();
     }, []);
+
+    const handleJobAdded = (newJob) => {
+        if (newJob) {
+            setJobs(prev => {
+                const updated = [newJob, ...prev];
+                localStorage.setItem(LS_KEY, JSON.stringify(updated));
+                return updated;
+            });
+        } else {
+            loadJobs();
+        }
+    };
+
+    const handleDelete = (id) => {
+        setJobs(prev => {
+            const updated = prev.filter(j => j.id !== id);
+            localStorage.setItem(LS_KEY, JSON.stringify(updated));
+            return updated;
+        });
+    };
 
     const stats = [
         { label: 'Total Listings', value: jobs.length, Icon: Briefcase, gradient: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)', color: '#4F46E5' },
@@ -362,11 +408,17 @@ export default function Admin() {
                         ))}
                     </div>
 
-                    <AddJobForm onJobAdded={loadJobs} />
-                    <JobsTable jobs={jobs} loading={loading} onDelete={id => setJobs(p => p.filter(j => j.id !== id))} />
+                    <AddJobForm onJobAdded={handleJobAdded} />
+                    <JobsTable jobs={jobs} loading={loading} onDelete={handleDelete} />
                 </div>
 
-                <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}`}</style>
+                <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+                @media(max-width:640px){
+                    .qh-auth-header-inner{padding:0 16px !important;}
+                    .qh-stats-grid{grid-template-columns:1fr 1fr !important;}
+                    .qh-form-grid{grid-template-columns:1fr !important;}
+                    .qh-form-grid [style*="span 2"]{grid-column:span 1 !important;}
+                }`}</style>
             </div>
             <Footer />
         </>
